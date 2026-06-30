@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fierce Fitness | Скопје, Северна Македонија</title>
+    <meta name="description"
+          content="Fierce Fitness - Најсилниот фитнес центар во Скопје. Тренирај со најдобрите, постигни ги своите цели.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- Loading Screen -->
+<div id="loader" class="loader">
+    <div class="loader-inner">
+        <div class="loader-flame"><i class="fas fa-fire"></i></div>
+        <div class="loader-text">FIERCE FITNESS</div>
+        <div class="loader-bar">
+            <div class="loader-bar-fill"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursorFollower"></div>
+
+<!-- Cookie Consent -->
+<div class="cookie-banner" id="cookieBanner">
+    <div class="cookie-content">
+        <div class="cookie-text">
+            <i class="fas fa-cookie-bite"></i>
+            <p data-i18n="cookie_text">Овој сајт користи колачиња за да ви обезбеди најдобро искуство. Со продолжување
+                на користењето, се согласувате со нашата употреба на колачиња.</p>
+        </div>
+        <div class="cookie-buttons">
+            <button class="btn-cookie btn-cookie-accept" id="cookieAccept" data-i18n="cookie_accept">Прифати</button>
+            <button class="btn-cookie btn-cookie-decline" id="cookieDecline" data-i18n="cookie_decline">Одбиј</button>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation -->
+<nav class="navbar" id="navbar">
+    <div class="nav-container">
+        <a href="#home" class="nav-logo">
+            <i class="fas fa-fire logo-flame"></i>
+            <span>FIERCE FITNESS</span>
+        </a>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="#home" class="nav-link active" data-i18n="nav_home">Почетна</a></li>
+            <li><a href="#about" class="nav-link" data-i18n="nav_about">За Нас</a></li>
+            <li><a href="#programs" class="nav-link" data-i18n="nav_programs">Програми</a></li>
+            <li><a href="#trainers" class="nav-link" data-i18n="nav_trainers">Тренери</a></li>
+            <li><a href="#pricing" class="nav-link" data-i18n="nav_pricing">Членство</a></li>
+            <li><a href="#blog" class="nav-link" data-i18n="nav_blog">Блог</a></li>
+            <li><a href="#contact" class="nav-link" data-i18n="nav_contact">Контакт</a></li>
+        </ul>
+        <div class="nav-actions">
+            <div class="translate-wrapper" id="translateWrapper">
+                <button class="translate-btn" id="translateBtn" aria-label="Translate">
+                    <i class="fas fa-globe globe-icon"></i>
+                    <span>Translate</span>
+                    <i class="fas fa-chevron-down" style="font-size:9px; opacity:0.5;"></i>
+                </button>
+                <div class="translate-dropdown" id="translateDropdown">
+                    <div class="translate-option active" data-lang="mk"><span class="flag">🇲🇰</span> Македонски</div>
+                    <div class="translate-option" data-lang="en"><span class="flag">🇬🇧</span> English</div>
+                    <div class="translate-option" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</div>
+                    <div class="translate-option" data-lang="fr"><span class="flag">🇫🇷</span> Français</div>
+                    <div class="translate-option" data-lang="sq"><span class="flag">🇦🇱</span> Shqip</div>
+                    <div class="translate-option" data-lang="tr"><span class="flag">🇹🇷</span> Türkçe</div>
+                </div>
+            </div>
+            <button class="lang-toggle" id="langToggle" aria-label="Switch language">
+                <span class="lang-active" id="langLabel">MK</span>
+                <div class="lang-slider"></div>
+            </button>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode">
+                <i class="fas fa-sun" id="themeIcon"></i>
+            </button>
+            <a href="#pricing" class="btn-nav-cta" data-i18n="nav_cta">Приклучи се</a>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero" id="home">
+    <div class="hero-bg">
+        <img src="images/hero.jpg" alt="Gym Training" class="hero-img" id="heroImg">
+        <div class="hero-overlay"></div>
+        <div class="hero-gradient-spotlight" id="heroSpotlight"></div>
+    </div>
+    <div class="hero-content">
+        <div class="hero-badge animate-in">
+            <i class="fas fa-fire"></i>
+            <span data-i18n="hero_badge">Најсилниот фитнес центар во Скопје</span>
+        </div>
+        <h1 class="hero-title animate-in" data-i18n="hero_title">ИЗГРАДИ ЈА СВОЈАТА<br><span class="text-accent">НАЈСИЛНА</span>
+            ВЕРЗИЈА</h1>
+        <p class="hero-description animate-in" data-i18n="hero_desc">Fierce Fitness е повеќе од теретана — е место каде
+            што се креираат шампиони. Со модерна опрема, сертифицирани тренери и атмосфера која те тера да дадеш се од
+            себе, секој тренинг е чекор кон твојата најдобра верзија.</p>
+        <div class="hero-buttons animate-in">
+            <a href="#pricing" class="btn btn-primary magnetic-btn" data-i18n="hero_cta1">Приклучи се</a>
+            <a href="#pricing" class="btn btn-outline magnetic-btn" data-i18n="hero_cta2">Види членство</a>
+        </div>
+        <div class="hero-location animate-in">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Северна Македонија, Скопје</span>
+        </div>
+    </div>
+    <div class="hero-scroll-indicator">
+        <div class="scroll-mouse">
+            <div class="scroll-wheel"></div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="section about" id="about">
+    <div class="container">
+        <div class="about-grid">
+            <div class="about-image-wrapper animate-in">
+                <div class="about-image">
+                    <img src="images/about.jpg" alt="Fierce Fitness Interior">
+                    <div class="about-image-badge">
+                        <span class="badge-number">8+</span>
+                        <span class="badge-text" data-i18n="about_badge">Години искуство</span>
+                    </div>
+                </div>
+                <!-- Hand-drawn accent scribble -->
+                <div class="about-scribble" aria-hidden="true">
+                    <svg viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 20 Q30 5, 60 20 Q90 35, 115 20" stroke="var(--accent)" stroke-width="2"
+                              stroke-linecap="round" fill="none" opacity="0.5"/>
+                        <path d="M15 28 Q40 15, 70 28 Q100 40, 110 25" stroke="var(--accent)" stroke-width="1.5"
+                              stroke-linecap="round" fill="none" opacity="0.3"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="about-content">
+                <div class="section-tag animate-in" data-i18n="about_tag">ЗА НАС</div>
+                <h2 class="section-title animate-in" data-i18n="about_title">Нашата <span
+                        class="text-accent">приказна</span></h2>
+                <p class="about-text animate-in" data-i18n="about_p1">Fierce Fitness е основан во 2016 година со една
+                    мисија — да создаде простор каде што секој човек, без разлика на нивото на kondicioniranje, може да
+                    го постигне својот максимум. Започнавме како мала теретана, а денес сме еден од најголемите фитнес
+                    центри во земјата.</p>
+                <p class="about-text animate-in" data-i18n="about_p2">Нашата филозофија е едноставна: комбинација на
+                    модерна опрема, научно-поткрепени методи на тренирање и персонален пристап кон секој член. Веруваме
+                    дека фитнесот не е само физичка активност — тоа е животен стил.</p>
+                <p class="about-text animate-in" data-i18n="about_p3">Со повеќе од 2500 активни членови и тим од 15
+                    сертифицирани професионалци, нудиме комплетно фитнес искуство кое надминува обична теретана.</p>
+            </div>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card animate-in">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-number" data-target="2500">0</div>
+                <div class="stat-suffix">+</div>
+                <div class="stat-label" data-i18n="stat_members">Активни членови</div>
+            </div>
+            <div class="stat-card animate-in">
+                <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="stat-number" data-target="8">0</div>
+                <div class="stat-suffix">+</div>
+                <div class="stat-label" data-i18n="stat_years">Години искуство</div>
+            </div>
+            <div class="stat-card animate-in">
+                <div class="stat-icon"><i class="fas fa-dumbbell"></i></div>
+                <div class="stat-number" data-target="15">0</div>
+                <div class="stat-suffix"></div>
+                <div class="stat-label" data-i18n="stat_trainers">Сертифицирани тренери</div>
+            </div>
+            <div class="stat-card animate-in">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-number" data-target="40">0</div>
+                <div class="stat-suffix">+</div>
+                <div class="stat-label" data-i18n="stat_classes">Групни часови неделно</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Programs Section -->
+<section class="section programs" id="programs">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag animate-in" data-i18n="programs_tag">ПРОГРАМИ</div>
+            <h2 class="section-title animate-in" data-i18n="programs_title">Најди <span
+                    class="text-accent">својот</span> стил</h2>
+            <p class="section-subtitle animate-in" data-i18n="programs_subtitle">Разновидни програми дизајнирани за
+                секоја цел и ниво</p>
+        </div>
+        <div class="programs-slider">
+            <div class="programs-track" id="programsTrack">
+                <div class="program-card animate-in">
+                    <div class="program-image">
+                        <img src="images/strength.jpg" alt="Strength Training">
+                        <div class="program-overlay">
+                            <span class="program-more" data-i18n="program_more">Повеќе →</span>
+                        </div>
+                    </div>
+                    <div class="program-info">
+                        <h3 data-i18n="program1_title">Strength Training</h3>
+                        <p data-i18n="program1_desc">Гради мускулна маса и сила со нашите модерни тегови и машини.
+                            Погодно за сите нивоа.</p>
+                    </div>
+                </div>
+                <div class="program-card animate-in">
+                    <div class="program-image">
+                        <img src="images/hiit.jpg" alt="HIIT Training">
+                        <div class="program-overlay">
+                            <span class="program-more" data-i18n="program_more">Повеќе →</span>
+                        </div>
+                    </div>
+                    <div class="program-info">
+                        <h3 data-i18n="program2_title">HIIT</h3>
+                        <p data-i18n="program2_desc">Интензивни интервални тренинзи за максимално согорување калории и
+                            подобрување на кондицијата.</p>
+                    </div>
+                </div>
+                <div class="program-card animate-in">
+                    <div class="program-image">
+                        <img src="images/functional.jpg" alt="Functional Training">
+                        <div class="program-overlay">
+                            <span class="program-more" data-i18n="program_more">Повеќе →</span>
+                        </div>
+                    </div>
+                    <div class="program-info">
+                        <h3 data-i18n="program3_title">Functional Training</h3>
+                        <p data-i18n="program3_desc">Вежби кои го подобруваат секојдневното движење, рамнотежата и
+                            флексибилноста.</p>
+                    </div>
+                </div>
+                <div class="program-card animate-in">
+                    <div class="program-image">
+                        <img src="images/personal.jpg" alt="Personal Training">
+                        <div class="program-overlay">
+                            <span class="program-more" data-i18n="program_more">Повеќе →</span>
+                        </div>
+                    </div>
+                    <div class="program-info">
+                        <h3 data-i18n="program4_title">Personal Training</h3>
+                        <p data-i18n="program4_desc">Индивидуални сесии со нашите најдобри тренери, целосно прилагодени
+                            на твоите цели.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-btn slider-prev" id="sliderPrev" aria-label="Previous"><i
+                        class="fas fa-chevron-left"></i></button>
+                <div class="slider-dots" id="sliderDots"></div>
+                <button class="slider-btn slider-next" id="sliderNext" aria-label="Next"><i
+                        class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trainers Section -->
+<section class="section trainers" id="trainers">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag animate-in" data-i18n="trainers_tag">ТРЕНЕРИ</div>
+            <h2 class="section-title animate-in" data-i18n="trainers_title">Експерти кои те <span class="text-accent">водат</span>
+            </h2>
+            <p class="section-subtitle animate-in" data-i18n="trainers_subtitle">Нашите сертифицирани професионалци се
+                тука да те водат кон успех</p>
+        </div>
+        <div class="trainers-grid">
+            <!-- Trainer 1 — larger card -->
+            <div class="trainer-card trainer-card--featured animate-in">
+                <div class="trainer-image">
+                    <img src="images/trainer1.jpg" alt="Андреј Димовски">
+                    <div class="trainer-socials">
+                        <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"
+                           title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"
+                           title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                <div class="trainer-info">
+                    <h3>Андреј Димовски</h3>
+                    <span class="trainer-role" data-i18n="trainer1_role">Head Coach</span>
+                    <p class="trainer-spec" data-i18n="trainer1_spec">Специјализиран за Strength & Conditioning</p>
+                </div>
+            </div>
+            <!-- Trainer 2 -->
+            <div class="trainer-card animate-in">
+                <div class="trainer-image">
+                    <img src="images/trainer2.jpg" alt="Марија Јаневска">
+                    <div class="trainer-socials">
+                        <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"
+                           title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"
+                           title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                <div class="trainer-info">
+                    <h3>Марија Јаневска</h3>
+                    <span class="trainer-role" data-i18n="trainer2_role">HIIT & Functional Coach</span>
+                    <p class="trainer-spec" data-i18n="trainer2_spec">Специјализирана за кардио и функционален
+                        тренинг</p>
+                </div>
+            </div>
+            <!-- Trainer 3 -->
+            <div class="trainer-card animate-in">
+                <div class="trainer-image">
+                    <img src="images/trainer3.jpg" alt="Никола Стојанов">
+                    <div class="trainer-socials">
+                        <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"
+                           title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"
+                           title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                <div class="trainer-info">
+                    <h3>Никола Стојанов</h3>
+                    <span class="trainer-role" data-i18n="trainer3_role">Coach</span>
+                    <p class="trainer-spec" data-i18n="trainer3_spec">Специјализиран за Bodybuilding & Nutrition</p>
+                </div>
+            </div>
+            <!-- Trainer 4 -->
+            <div class="trainer-card animate-in">
+                <div class="trainer-image">
+                    <img src="images/trainer4.jpg" alt="Ивана Костова">
+                    <div class="trainer-socials">
+                        <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"
+                           title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"
+                           title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                <div class="trainer-info">
+                    <h3>Ивана Костова</h3>
+                    <span class="trainer-role" data-i18n="trainer4_role">Yoga & Flexibility Coach</span>
+                    <p class="trainer-spec" data-i18n="trainer4_spec">Специјализирана за мобилност и релаксација</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section class="section pricing" id="pricing">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag animate-in" data-i18n="pricing_tag">ЧЛЕНСТВО</div>
+            <h2 class="section-title animate-in" data-i18n="pricing_title">Избери <span class="text-accent">свој</span>
+                план</h2>
+            <p class="section-subtitle animate-in" data-i18n="pricing_subtitle">Флексибилни планови прилагодени на
+                твоите потреби</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card animate-in">
+                <div class="pricing-header">
+                    <h3 class="pricing-name" data-i18n="pricing_basic_name">Basic</h3>
+                    <div class="pricing-price">
+                        <span class="price-amount">1890</span>
+                        <span class="price-currency">ден</span>
+                        <span class="price-period" data-i18n="pricing_period">/месечно</span>
+                    </div>
+                </div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing_basic_f1">Пристап кон теретана</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing_basic_f2">Основни групни часови</span>
+                    </li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing_basic_f3">Сауна</span></li>
+                    <li class="disabled"><i class="fas fa-times"></i> <span data-i18n="pricing_basic_f4">Personal Training</span>
+                    </li>
+                    <li class="disabled"><i class="fas fa-times"></i> <span data-i18n="pricing_basic_f5">Нутриционистички план</span>
+                    </li>
+                    <li class="disabled"><i class="fas fa-times"></i> <span data-i18n="pricing_basic_f6">Масажа</span>
+                    </li>
+                </ul>
+                <button class="btn btn-outline btn-pricing magnetic-btn" data-i18n="pricing_cta">Избери план</button>
+            </div>
+            <div class="pricing-card pricing-popular animate-in">
+                <div class="pricing-badge" data-i18n="pricing_badge">Најпопуларно</div>
+                <div class="pricing-header">
+                    <h3 class="pricing-name" data-i18n="pricing_premium_name">Premium</h3>
+                    <div class="pricing-price">
+                        <span class="price-amount">2890</span>
+                        <span class="price-currency">ден</span>
+                        <span class="price-period" data-i18n="pricing_period">/месечно</span>
+                    </div>
+                </div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing_premium_f1">Пристап кон теретана</span>
+                    </li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing_premium_f2">Сите групни часови</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing_premium_f3">Сауна & парна бања</span></li>
+                    <li><i class="fas fa-check"></i> <span
+                            data-i18n="pricing_premium_f4">2 Personal Training сесии</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing_premium_f5">Нутриционистички план</span>
+                    </li>
+                    <li class="disabled"><i class="fas fa-times"></i> <span data-i18n="pricing_premium_f6">Масажа</span>
+                    </li>
+                </ul>
+                <button class="btn btn-primary btn-pricing magnetic-btn" data-i18n="pricing_cta">Избери план</button>
+            </div>
+            <div class="pricing-card animate-in">
+                <!-- Rotated "Limited spots" sticker — imperfect detail -->
+                <div class="pricing-sticker" aria-hidden="true">Limited spots</div>
+                <div class="pricing-header">
+                    <h3 class="pricing-name" data-i18n="pricing_elite_name">Elite</h3>
+                    <div class="pricing-price">
+                        <span class="price-amount">3990</span>
+                        <span class="price-currency">ден</span>
+                        <span class="price-period" data-i18n="pricing_period">/месечно</span>
+                    </div>
+                </div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing_elite_f1">Пристап кон теретана</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing_elite_f2">Сите групни часови</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing_elite_f3">Сауна & парна бања</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing_elite_f4">Неограничени PT сесии</span>
+                    </li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing_elite_f5">Персонален нутриционист</span>
+                    </li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="pricing_elite_f6">Неделна масажа</span></li>
+                </ul>
+                <button class="btn btn-outline btn-pricing magnetic-btn" data-i18n="pricing_cta">Избери план</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Blog Section -->
+<section class="section blog" id="blog">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag animate-in" data-i18n="blog_tag">БЛОГ</div>
+            <h2 class="section-title animate-in" data-i18n="blog_title">Најнови <span class="text-accent">статии</span>
+            </h2>
+        </div>
+        <div class="blog-grid">
+            <article class="blog-card blog-featured animate-in">
+                <div class="blog-image">
+                    <img src="images/blog-nutrition.jpg" alt="Nutrition Guide">
+                    <div class="blog-overlay">
+                        <span class="blog-read-more" data-i18n="blog_read_more">Прочитај повеќе →</span>
+                    </div>
+                    <span class="blog-category" data-i18n="blog_cat_nutrition">Нутриција</span>
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="fas fa-calendar"></i> 15 Мај, 2026</span>
+                        <span><i class="fas fa-user"></i> Андреј Димовски</span>
+                    </div>
+                    <h3 data-i18n="blog1_title">Комплетен водич за исхрана при тренирање</h3>
+                    <p data-i18n="blog1_desc">Дознај која е најдобрата исхрана за постигнување на твоите фитнес цели. Од
+                        макронутриенти до тајминг на оброци...</p>
+                </div>
+            </article>
+            <article class="blog-card animate-in">
+                <div class="blog-image">
+                    <img src="images/blog-motivation.jpg" alt="Motivation">
+                    <div class="blog-overlay">
+                        <span class="blog-read-more" data-i18n="blog_read_more">Прочитај повеќе →</span>
+                    </div>
+                    <span class="blog-category" data-i18n="blog_cat_motivation">Мотивација</span>
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="fas fa-calendar"></i> 10 Мај, 2026</span>
+                    </div>
+                    <h4 data-i18n="blog2_title">5 начини да останеш мотивиран</h4>
+                </div>
+            </article>
+            <article class="blog-card animate-in">
+                <div class="blog-image">
+                    <img src="images/blog-health.jpg" alt="Health">
+                    <div class="blog-overlay">
+                        <span class="blog-read-more" data-i18n="blog_read_more">Прочитај повеќе →</span>
+                    </div>
+                    <span class="blog-category" data-i18n="blog_cat_health">Здравје</span>
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="fas fa-calendar"></i> 5 Мај, 2026</span>
+                    </div>
+                    <h4 data-i18n="blog3_title">Значењето на опоравувањето по тренинг</h4>
+                </div>
+            </article>
+            <article class="blog-card animate-in">
+                <div class="blog-image">
+                    <img src="images/blog-training.jpg" alt="Training">
+                    <div class="blog-overlay">
+                        <span class="blog-read-more" data-i18n="blog_read_more">Прочитај повеќе →</span>
+                    </div>
+                    <span class="blog-category" data-i18n="blog_cat_training">Тренинг</span>
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="fas fa-calendar"></i> 1 Мај, 2026</span>
+                    </div>
+                    <h4 data-i18n="blog4_title">HIIT vs. Classic: што е подобро?</h4>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="section contact" id="contact">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag animate-in" data-i18n="contact_tag">КОНТАКТ</div>
+            <h2 class="section-title animate-in" data-i18n="contact_title">Стапи во <span
+                    class="text-accent">контакт</span></h2>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-form-wrapper animate-in">
+                <form class="contact-form" id="contactForm" novalidate>
+                    <div class="form-group">
+                        <input type="text" id="formName" required autocomplete="name" placeholder=" ">
+                        <label for="formName" data-i18n="contact_name">Име и презиме</label>
+                        <span class="form-line"></span>
+                        <span class="error-message" data-i18n="form_error_name">Внесете го вашето име</span>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="formEmail" required autocomplete="email" placeholder=" ">
+                        <label for="formEmail" data-i18n="contact_email">Email адреса</label>
+                        <span class="form-line"></span>
+                        <span class="error-message" data-i18n="form_error_email">Внесете валидна email адреса</span>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="formPhone" autocomplete="tel" placeholder=" ">
+                        <label for="formPhone" data-i18n="contact_phone">Телефон</label>
+                        <span class="form-line"></span>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="formMessage" rows="4" required placeholder=" "></textarea>
+                        <label for="formMessage" data-i18n="contact_message">Порака</label>
+                        <span class="form-line"></span>
+                        <span class="error-message" data-i18n="form_error_message">Внесете порака</span>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-submit magnetic-btn" data-i18n="contact_submit">
+                        Испрати порака
+                    </button>
+                    <div class="form-success" id="formSuccess">
+                        <i class="fas fa-check-circle"></i>
+                        <p data-i18n="contact_success">Вашата порака е успешно испратена! Ќе ви одговориме најбрзо што
+                            можеме.</p>
+                    </div>
+                </form>
+            </div>
+            <div class="contact-info-wrapper animate-in">
+                <div class="contact-info-card">
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div>
+                            <h4 data-i18n="contact_info_address">Адреса</h4>
+                            <p>ул. Македонија бр. 23, 1000 Скопје</p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon"><i class="fas fa-phone-alt"></i></div>
+                        <div>
+                            <h4 data-i18n="contact_info_phone">Телефон</h4>
+                            <p>+389 2 312 4567</p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon"><i class="fas fa-envelope"></i></div>
+                        <div>
+                            <h4 data-i18n="contact_info_email">Email</h4>
+                            <p>info@fiercefitness.mk</p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon"><i class="fas fa-clock"></i></div>
+                        <div>
+                            <h4 data-i18n="contact_info_hours">Работно време</h4>
+                            <p data-i18n="contact_hours_detail">Пон - Пет: 06:00 - 23:00<br>Саб - Нед: 08:00 - 22:00</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-map">
+                    <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2992.78!2d21.4314!3d41.9965!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x135415a1b3ef5e6f%3A0x32f010b23b8e2c6a!2sMacedonia%20Square!5e0!3m2!1sen!2smk!4v1700000000000!5m2!1sen!2smk"
+                            width="100%"
+                            height="250"
+                            style="border:0; border-radius: 12px;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            title="Fierce Fitness Location - Skopje">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="#home" class="footer-logo">
+                    <i class="fas fa-fire"></i>
+                    <span>FIERCE FITNESS</span>
+                </a>
+                <p data-i18n="footer_desc">Најсилниот фитнес центар во Скопје. Изгради ја својата најсилна верзија со
+                    нас.</p>
+                <div class="footer-socials">
+                    <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"
+                       title="Demo link"><i class="fab fa-instagram"></i></a>
+                    <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"
+                       title="Demo link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok" title="Demo link"><i
+                            class="fab fa-tiktok"></i></a>
+                    <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube" title="Demo link"><i
+                            class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4 data-i18n="footer_quick_links">Брзи линкови</h4>
+                <ul>
+                    <li><a href="#home" data-i18n="nav_home">Почетна</a></li>
+                    <li><a href="#about" data-i18n="nav_about">За Нас</a></li>
+                    <li><a href="#programs" data-i18n="nav_programs">Програми</a></li>
+                    <li><a href="#trainers" data-i18n="nav_trainers">Тренери</a></li>
+                    <li><a href="#pricing" data-i18n="nav_pricing">Членство</a></li>
+                </ul>
+            </div>
+            <div class="footer-newsletter">
+                <h4 data-i18n="footer_newsletter">Newsletter</h4>
+                <p data-i18n="footer_newsletter_desc">Пријави се за совети за тренирање и ексклузивни понуди.</p>
+                <form class="newsletter-form" id="newsletterForm">
+                    <input type="email" placeholder="Email адреса" required>
+                    <button type="submit" aria-label="Subscribe"><i class="fas fa-arrow-right"></i></button>
+                    <span class="newsletter-success" id="newsletterSuccess"><i class="fas fa-check"></i></span>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Fierce Fitness. <span data-i18n="footer_rights">Сите права задржани.</span></p>
+        </div>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+<div id="google_translate_element"></div>
+<script>
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'mk',
+            includedLanguages: 'en,de,fr,sq,tr',
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>
