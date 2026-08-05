@@ -1,8 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from app.api.deps import get_db
+from typing import List
+
+from app.api.deps import get_db, get_current_active_user
 from app.models.newsletter import NewsletterSubscriber
+from app.models.user import User, RoleEnum
 from app.schemas.newsletter import NewsletterCreate, NewsletterOut
 
 router = APIRouter(prefix="/newsletter", tags=["Newsletter"])
@@ -28,3 +31,35 @@ async def subscribe_newsletter(
     await db.refresh(new_subscriber)
 
     return new_subscriber
+
+
+@router.get("/", response_model=List[NewsletterOut])
+async def get_all_subscribers(
+        db: AsyncSession = Depends(get_db),
+        current_user: User = Depends(get_current_active_user),
+        skip: int = 0,
+        limit: int = 50
+):
+    if current_user.role != RoleEnum.admin:
+        raise HTTPException(status_code=403, detail="Only admins can view subscribers")
+
+    result = await db.execute(select(NewsletterSubscriber).offset(skip).limit(limit))
+    return result.scalars().all()
+
+
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+async def unsubscribe(
+    id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
+    if current_user.role != RoleEnum.admin:
+        raise HTTPException(status_code=403, detail="Only admins can remove subscribers")
+
+    result = await db.execute(select(NewsletterSubscriber).where(NewsletterSubscriber.id == id))
+    subscriber = result.scalars().first()
+    if not subscriber:
+        raise HTTPException(status_code=404, detail="Subscriber not found")
+
+    await db.delete(subscriber)
+    await db.commit()

@@ -22,3 +22,4 @@ class User(Base):
 
     trainer_profile = relationship("Trainer", back_populates="user", uselist=False)
     appointments = relationship("Appointment", back_populates="member")
+    memberships = relationship("UserMembership", back_populates="user")
