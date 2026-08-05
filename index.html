@@ -61,27 +61,12 @@
             <li><a href="#contact" class="nav-link" data-i18n="nav_contact">Контакт</a></li>
         </ul>
         <div class="nav-actions">
-            <div class="translate-wrapper" id="translateWrapper">
-                <button class="translate-btn" id="translateBtn" aria-label="Translate">
-                    <i class="fas fa-globe globe-icon"></i>
-                    <span>Translate</span>
-                    <i class="fas fa-chevron-down" style="font-size:9px; opacity:0.5;"></i>
-                </button>
-                <div class="translate-dropdown" id="translateDropdown">
-                    <div class="translate-option active" data-lang="mk"><span class="flag">🇲🇰</span> Македонски</div>
-                    <div class="translate-option" data-lang="en"><span class="flag">🇬🇧</span> English</div>
-                    <div class="translate-option" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</div>
-                    <div class="translate-option" data-lang="fr"><span class="flag">🇫🇷</span> Français</div>
-                    <div class="translate-option" data-lang="sq"><span class="flag">🇦🇱</span> Shqip</div>
-                    <div class="translate-option" data-lang="tr"><span class="flag">🇹🇷</span> Türkçe</div>
-                </div>
-            </div>
-            <button class="lang-toggle" id="langToggle" aria-label="Switch language">
-                <span class="lang-active" id="langLabel">MK</span>
-                <div class="lang-slider"></div>
-            </button>
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode">
                 <i class="fas fa-sun" id="themeIcon"></i>
+            </button>
+            <button class="user-btn" id="userBtn" aria-label="Account">
+                <i class="fas fa-user"></i>
+                <span class="user-btn-label" id="userBtnLabel">Најава</span>
             </button>
             <a href="#pricing" class="btn-nav-cta" data-i18n="nav_cta">Приклучи се</a>
             <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -363,7 +348,8 @@
                 твоите потреби</p>
         </div>
         <div class="pricing-grid">
-            <div class="pricing-card animate-in">
+            <div class="pricing-card animate-in" data-plan-id-card="1">
+                <span class="active-badge" data-i18n="dash_current">Тековен</span>
                 <div class="pricing-header">
                     <h3 class="pricing-name" data-i18n="pricing_basic_name">Basic</h3>
                     <div class="pricing-price">
@@ -384,9 +370,10 @@
                     <li class="disabled"><i class="fas fa-times"></i> <span data-i18n="pricing_basic_f6">Масажа</span>
                     </li>
                 </ul>
-                <button class="btn btn-outline btn-pricing magnetic-btn" data-i18n="pricing_cta">Избери план</button>
+                <button class="btn btn-outline btn-pricing magnetic-btn" data-plan-id="1" data-i18n="pricing_cta">Избери план</button>
             </div>
-            <div class="pricing-card pricing-popular animate-in">
+            <div class="pricing-card pricing-popular animate-in" data-plan-id-card="2">
+                <span class="active-badge" data-i18n="dash_current">Тековен</span>
                 <div class="pricing-badge" data-i18n="pricing_badge">Најпопуларно</div>
                 <div class="pricing-header">
                     <h3 class="pricing-name" data-i18n="pricing_premium_name">Premium</h3>
@@ -408,9 +395,10 @@
                     <li class="disabled"><i class="fas fa-times"></i> <span data-i18n="pricing_premium_f6">Масажа</span>
                     </li>
                 </ul>
-                <button class="btn btn-primary btn-pricing magnetic-btn" data-i18n="pricing_cta">Избери план</button>
+                <button class="btn btn-primary btn-pricing magnetic-btn" data-plan-id="2" data-i18n="pricing_cta">Избери план</button>
             </div>
-            <div class="pricing-card animate-in">
+            <div class="pricing-card animate-in" data-plan-id-card="3">
+                <span class="active-badge" data-i18n="dash_current">Тековен</span>
                 <!-- Rotated "Limited spots" sticker — imperfect detail -->
                 <div class="pricing-sticker" aria-hidden="true">Limited spots</div>
                 <div class="pricing-header">
@@ -431,7 +419,7 @@
                     </li>
                     <li><i class="fas fa-check"></i> <span data-i18n="pricing_elite_f6">Неделна масажа</span></li>
                 </ul>
-                <button class="btn btn-outline btn-pricing magnetic-btn" data-i18n="pricing_cta">Избери план</button>
+                <button class="btn btn-outline btn-pricing magnetic-btn" data-plan-id="3" data-i18n="pricing_cta">Избери план</button>
             </div>
         </div>
     </div>
@@ -653,7 +641,111 @@
     </div>
 </footer>
 
-<script src="script.js"></script>
+<!-- Auth Modal -->
+<div class="auth-modal" id="authModal">
+    <div class="auth-modal-overlay" id="authModalOverlay"></div>
+    <div class="auth-modal-content">
+        <button class="auth-modal-close" id="authModalClose">&times;</button>
+
+        <!-- Logged Out State -->
+        <div class="auth-logged-out" id="authLoggedOut">
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Најава</button>
+                <button class="auth-tab" data-tab="register">Регистрација</button>
+            </div>
+
+            <!-- Login Form -->
+            <form class="auth-form" id="loginForm">
+                <div class="form-group">
+                    <input type="email" id="loginEmail" required placeholder=" ">
+                    <label>Email</label>
+                    <span class="form-line"></span>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPassword" required placeholder=" ">
+                    <label>Лозинка</label>
+                    <span class="form-line"></span>
+                </div>
+                <div class="auth-error" id="loginError"></div>
+                <button type="submit" class="btn btn-primary btn-full">Најави се</button>
+            </form>
+
+            <!-- Register Form -->
+            <form class="auth-form" id="registerForm" style="display:none">
+                <div class="form-group">
+                    <input type="text" id="regFirstName" required placeholder=" ">
+                    <label>Име</label>
+                    <span class="form-line"></span>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="regLastName" required placeholder=" ">
+                    <label>Презиме</label>
+                    <span class="form-line"></span>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="regEmail" required placeholder=" ">
+                    <label>Email</label>
+                    <span class="form-line"></span>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="regPassword" required placeholder=" ">
+                    <label>Лозинка</label>
+                    <span class="form-line"></span>
+                </div>
+                <div class="auth-error" id="registerError"></div>
+                <button type="submit" class="btn btn-primary btn-full">Регистрирај се</button>
+            </form>
+        </div>
+
+        <!-- Logged In State -->
+        <div class="auth-logged-in" id="authLoggedIn" style="display:none">
+            <div class="auth-user-info">
+                <i class="fas fa-user-circle"></i>
+                <span id="authUserName"></span>
+                <span id="authUserRole" class="auth-role-badge"></span>
+            </div>
+
+            <div class="dashboard-section" id="dashboardNoPlan" style="display:none">
+                <div class="dashboard-empty">
+                    <i class="fas fa-ticket-alt"></i>
+                    <p data-i18n="dash_no_plan">Немате активен план</p>
+                    <a href="#pricing" class="btn btn-primary btn-sm" id="dashBrowsePlans" data-i18n="dash_browse">Прелистај планови</a>
+                </div>
+            </div>
+
+            <div class="dashboard-section" id="dashboardActivePlan" style="display:none">
+                <div class="dashboard-plan-card">
+                    <div class="plan-card-header">
+                        <i class="fas fa-crown"></i>
+                        <span class="plan-status-badge" id="planStatusBadge">ACTIVE</span>
+                    </div>
+                    <h3 class="plan-card-name" id="planCardName"></h3>
+                    <div class="plan-card-price" id="planCardPrice"></div>
+                    <div class="plan-card-date" id="planCardDate"></div>
+                    <div class="plan-card-features" id="planCardFeatures"></div>
+                    <div class="plan-card-actions">
+                        <button class="btn btn-outline btn-sm" id="deactivatePlanBtn" data-i18n="dash_deactivate">Деактивирај план</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-section">
+                <h4 class="dashboard-section-title" data-i18n="dash_history">Историја</h4>
+                <div id="dashboardHistory"></div>
+            </div>
+
+            <button class="btn btn-outline btn-full" id="logoutBtn">Одјави се</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMessage"></span>
+</div>
+
+<script src="script.js?v=5"></script>
 <div id="google_translate_element"></div>
 <script>
     function googleTranslateElementInit() {

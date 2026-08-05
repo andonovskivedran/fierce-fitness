@@ -22,7 +22,7 @@ class TrainerAssignment(BaseModel):
     image_url: Optional[str] = None
 
 
-@router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)
+@router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register_user(user_in: UserCreate, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(User).where(User.email == user_in.email))
     if result.scalars().first():
@@ -38,7 +38,19 @@ async def register_user(user_in: UserCreate, db: AsyncSession = Depends(get_db))
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
-    return new_user
+
+    access_token = create_access_token(subject=new_user.id)
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": {
+            "id": new_user.id,
+            "email": new_user.email,
+            "first_name": new_user.first_name,
+            "last_name": new_user.last_name,
+            "role": new_user.role.value
+        }
+    }
 
 
 @router.post("/login")
@@ -57,7 +69,17 @@ async def login(
         )
 
     access_token = create_access_token(subject=user.id)
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": {
+            "id": user.id,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "role": user.role.value
+        }
+    }
 
 
 @router.get("/me", response_model=UserOut)
