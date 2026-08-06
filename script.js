@@ -29,6 +29,32 @@ function showToast(message, isError = false) {
     t._timeout = setTimeout(() => t.classList.remove("show"), 3000);
 }
 
+function showConfirmModal(message) {
+    return new Promise(resolve => {
+        const modal = document.getElementById("confirmModal");
+        const msgEl = document.getElementById("confirmModalMessage");
+        const okBtn = document.getElementById("confirmModalOk");
+        const cancelBtn = document.getElementById("confirmModalCancel");
+        const overlay = document.getElementById("confirmModalOverlay");
+        msgEl.textContent = message;
+        okBtn.textContent = translations[currentLang]?.confirm_ok || "Потврди";
+        cancelBtn.textContent = translations[currentLang]?.confirm_cancel || "Откажи";
+        modal.classList.add("show");
+        function cleanup(result) {
+            modal.classList.remove("show");
+            okBtn.removeEventListener("click", onOk);
+            cancelBtn.removeEventListener("click", onCancel);
+            overlay.removeEventListener("click", onCancel);
+            resolve(result);
+        }
+        function onOk() { cleanup(true); }
+        function onCancel() { cleanup(false); }
+        okBtn.addEventListener("click", onOk);
+        cancelBtn.addEventListener("click", onCancel);
+        overlay.addEventListener("click", onCancel);
+    });
+}
+
 // --- Translations ---
 const translations = {
     mk: {
@@ -146,10 +172,13 @@ const translations = {
         dash_deactivate: "Деактивирај",
         dash_switch: "Промени план",
         dash_switch_confirm: "Веќе имате активен план. Дали сакате да го смените?",
+        pricing_switch_confirm: "Веќе имате активен план ({oldPlan}). Дали сакате да го смените за {newPlan}?",
         dash_deactivate_confirm: "Дали сте сигурни дека сакате да го деактивирате планот?",
         dash_plan_activated: "Планот е активиран!",
         dash_plan_deactivated: "Планот е деактивиран!",
         dash_plan_switched: "Планот е сменет!",
+        confirm_cancel: "Откажи",
+        confirm_ok: "Потврди",
         // Footer
         footer_desc: "Најсилниот фитнес центар во Скопје. Изгради ја својата најсилна верзија со нас.",
         footer_quick_links: "Брзи линкови",
@@ -280,10 +309,13 @@ const translations = {
         dash_deactivate: "Deactivate",
         dash_switch: "Switch plan",
         dash_switch_confirm: "You already have an active plan. Do you want to switch?",
+        pricing_switch_confirm: "You already have an active plan ({oldPlan}). Do you want to switch to {newPlan}?",
         dash_deactivate_confirm: "Are you sure you want to deactivate your plan?",
         dash_plan_activated: "Plan activated!",
         dash_plan_deactivated: "Plan deactivated!",
         dash_plan_switched: "Plan switched!",
+        confirm_cancel: "Cancel",
+        confirm_ok: "Confirm",
         // Footer
         footer_desc: "The strongest fitness center in Skopje. Build your strongest version with us.",
         footer_quick_links: "Quick Links",
@@ -941,13 +973,7 @@ function initAuthModal() {
             if (window._pendingPlanId) {
                 const pid = window._pendingPlanId;
                 window._pendingPlanId = null;
-                try {
-                    await api(`/memberships/subscribe?plan_id=${pid}`, { method: "POST" });
-                    showToast("Членството е активирано!");
-                    refreshAuthUI();
-                } catch (err) {
-                    showToast(err.message || "Грешка при активација", true);
-                }
+                await handlePricingClick(pid);
             }
         } catch (err) {
             errEl.textContent = err.message || "Грешка при најава";
@@ -976,13 +1002,7 @@ function initAuthModal() {
             if (window._pendingPlanId) {
                 const pid = window._pendingPlanId;
                 window._pendingPlanId = null;
-                try {
-                    await api(`/memberships/subscribe?plan_id=${pid}`, { method: "POST" });
-                    showToast("Членството е активирано!");
-                    refreshAuthUI();
-                } catch (err) {
-                    showToast(err.message || "Грешка при активација", true);
-                }
+                await handlePricingClick(pid);
             }
         } catch (err) {
             errEl.textContent = err.message || "Грешка при регистрација";
@@ -1001,7 +1021,7 @@ function initAuthModal() {
     if (deactivateBtn) {
         deactivateBtn.addEventListener("click", async () => {
             const msg = translations[currentLang]?.dash_deactivate_confirm || "Дали сте сигурни дека сакате да го деактивирате планот?";
-            if (!confirm(msg)) return;
+            if (!await showConfirmModal(msg)) return;
             try {
                 await api("/memberships/deactivate", { method: "POST" });
                 showToast(translations[currentLang]?.dash_plan_deactivated || "Планот е деактивиран!");
@@ -1129,6 +1149,34 @@ async function loadDashboard() {
 }
 
 // --- Pricing Buttons ---
+async function handlePricingClick(planId) {
+    try {
+        let active = null;
+        try {
+            active = await api("/memberships/active");
+        } catch (_) { /* no active plan */ }
+
+        const planCard = document.querySelector(`[data-plan-id-card="${planId}"]`);
+        const newPlanName = planCard ? planCard.querySelector(".pricing-name")?.textContent : `#${planId}`;
+
+        if (active && active.plan_id && active.plan_id != planId) {
+            const oldPlanName = active.plan_name || `#${active.plan_id}`;
+            const msg = (translations[currentLang]?.pricing_switch_confirm || "Веќе имате активен план ({oldPlan}). Дали сакате да го смените за {newPlan}?")
+                .replace("{oldPlan}", oldPlanName)
+                .replace("{newPlan}", newPlanName);
+            if (!await showConfirmModal(msg)) return;
+            await api(`/memberships/switch?plan_id=${planId}`, { method: "POST" });
+            showToast(translations[currentLang]?.dash_plan_switched || "Планот е сменет!");
+        } else {
+            await api(`/memberships/subscribe?plan_id=${planId}`, { method: "POST" });
+            showToast(translations[currentLang]?.dash_plan_activated || "Планот е активиран!");
+        }
+        refreshAuthUI();
+    } catch (err) {
+        showToast(err.message || "Грешка", true);
+    }
+}
+
 function initPricingButtons() {
     console.log("[FF] initPricingButtons called, buttons found:", document.querySelectorAll(".btn-pricing").length);
     document.querySelectorAll(".btn-pricing").forEach(btn => {
@@ -1147,19 +1195,7 @@ function initPricingButtons() {
             }
             const planId = btn.dataset.planId;
             if (!planId) return;
-            try {
-                await api(`/memberships/subscribe?plan_id=${planId}`, {
-                    method: "POST"
-                });
-                showToast(translations[currentLang]?.dash_plan_activated || "Планот е активиран!");
-                refreshAuthUI();
-            } catch (err) {
-                if (err.message.includes("Already subscribed")) {
-                    showToast(err.message, true);
-                } else {
-                    showToast(err.message || "Грешка", true);
-                }
-            }
+            await handlePricingClick(planId);
         });
     });
 }
@@ -1184,12 +1220,7 @@ document.addEventListener("click", function(e) {
         }
         const planId = btn.dataset.planId;
         if (!planId) return;
-        api(`/memberships/subscribe?plan_id=${planId}`, { method: "POST" })
-            .then(() => {
-                showToast(translations[currentLang]?.dash_plan_activated || "Планот е активиран!");
-                refreshAuthUI();
-            })
-            .catch(err => showToast(err.message || "Грешка", true));
+        handlePricingClick(planId);
         return;
     }
 

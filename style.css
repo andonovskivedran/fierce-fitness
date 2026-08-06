@@ -2163,6 +2163,84 @@ body.light-mode .about-image-badge {
     color: var(--text);
 }
 
+/* Confirm Modal */
+.confirm-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10002;
+    align-items: center;
+    justify-content: center;
+}
+
+.confirm-modal.show {
+    display: flex;
+}
+
+.confirm-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+}
+
+.confirm-modal-content {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    width: 100%;
+    max-width: 420px;
+    z-index: 1;
+    text-align: center;
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.confirm-modal-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--accent-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.confirm-modal-icon i {
+    font-size: 24px;
+    color: var(--accent);
+}
+
+.confirm-modal-message {
+    font-size: 16px;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+.confirm-modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.confirm-modal-actions .btn {
+    min-width: 120px;
+}
+
 .auth-tabs {
     display: flex;
     gap: 8px;
