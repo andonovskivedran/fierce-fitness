@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import List
@@ -33,8 +33,8 @@ async def submit_contact_form(
 async def get_all_messages(
         db: AsyncSession = Depends(get_db),
         current_user: User = Depends(get_current_active_user),
-        skip: int = 0,
-        limit: int = 50
+        skip: int = Query(default=0, ge=0),
+        limit: int = Query(default=50, ge=1, le=100)
 ):
     if current_user.role != RoleEnum.admin:
         raise HTTPException(status_code=403, detail="Only admins can view contact messages")

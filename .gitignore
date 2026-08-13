@@ -6,6 +6,8 @@ venv/
 env/
 .venv/
 .env
+.env.*
+!.env.example
 
 # Node/React
 node_modules/
@@ -18,5 +20,16 @@ build/
 
 # OS
 .DS_Store
+Thumbs.db
 
+# Docker
+docker-compose.override.yml
+
+# Secrets
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.jks
 

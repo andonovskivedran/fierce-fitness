@@ -58,6 +58,7 @@
             <li><a href="#trainers" class="nav-link" data-i18n="nav_trainers">Тренери</a></li>
             <li><a href="#pricing" class="nav-link" data-i18n="nav_pricing">Членство</a></li>
             <li><a href="#blog" class="nav-link" data-i18n="nav_blog">Блог</a></li>
+            <li><a href="#faq" class="nav-link" data-i18n="nav_faq">ЧПП</a></li>
             <li><a href="#contact" class="nav-link" data-i18n="nav_contact">Контакт</a></li>
         </ul>
         <div class="nav-actions">
@@ -263,7 +264,7 @@
             <p class="section-subtitle animate-in" data-i18n="trainers_subtitle">Нашите сертифицирани професионалци се
                 тука да те водат кон успех</p>
         </div>
-        <div class="trainers-grid">
+        <div class="trainers-grid" id="trainersGrid">
             <!-- Trainer 1 — larger card -->
             <div class="trainer-card trainer-card--featured animate-in">
                 <div class="trainer-image">
@@ -425,6 +426,82 @@
     </div>
 </section>
 
+<!-- FAQ Section -->
+<section class="section faq" id="faq">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag animate-in" data-i18n="faq_tag">ЧЕСТО ПОСТАВУВАНИ ПРАШАЊА</div>
+            <h2 class="section-title animate-in" data-i18n="faq_title">Имаш <span class="text-accent">прашање</span>?</h2>
+            <p class="section-subtitle animate-in" data-i18n="faq_subtitle">Одговори на најчестите прашања од нашите членови</p>
+        </div>
+        <div class="faq-list">
+            <div class="faq-item animate-in">
+                <button class="faq-question" aria-expanded="false">
+                    <span data-i18n="faq_q1">Кои планови за членство ги нудите?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p data-i18n="faq_a1">Нудиме три планови: Basic (1890 ден/месечно) со пристап кон теретана, основни групни часови и сауна; Premium (2890 ден/месечно) со сите групни часови, сауна и парна бања, 2 PT сесии и нутриционистички план; и Elite (3990 ден/месечно) со неограничени PT сесии, персонален нутриционист и неделна масажа.</p>
+                </div>
+            </div>
+            <div class="faq-item animate-in">
+                <button class="faq-question" aria-expanded="false">
+                    <span data-i18n="faq_q2">Како можам да се регистрирам?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p data-i18n="faq_a2">Кликни на копчето „Најава" горе десно, избери „Регистрација" и внеси ги твоите податоци. По регистрацијата, можеш веднаш да избереш план за членство и да започнеш со тренирање.</p>
+                </div>
+            </div>
+            <div class="faq-item animate-in">
+                <button class="faq-question" aria-expanded="false">
+                    <span data-i18n="faq_q3">Дали можам да го сменам мојот план во текот на месецот?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p data-i18n="faq_a3">Да, можеш да го смениш твојот план во секое време. Кога ќе избереш нов план, стариот се деактивира и новиот се активира веднаш. Разликата во цената се пресметува пропорционално.</p>
+                </div>
+            </div>
+            <div class="faq-item animate-in">
+                <button class="faq-question" aria-expanded="false">
+                    <span data-i18n="faq_q4">Како можам да го откажам мојот план?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p data-i18n="faq_a4">Откажувањето е едноставно — оди во твојот профил, кликни на „Деактивирај план" и потврди. Планот ќе биде деактивиран веднаш, а пристапот ќе остане активен до крајот на тековниот наплатен период.</p>
+                </div>
+            </div>
+            <div class="faq-item animate-in">
+                <button class="faq-question" aria-expanded="false">
+                    <span data-i18n="faq_q5">Кои начини на плаќање ги прифаќате?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p data-i18n="faq_a5">Прифаќаме плаќање преку банкарска картица, жиро сметка и во готово во теретаната. Плаќањето се врши месечно, а првата наплата се прави при активацијата на планот.</p>
+                </div>
+            </div>
+            <div class="faq-item animate-in">
+                <button class="faq-question" aria-expanded="false">
+                    <span data-i18n="faq_q6">Дали нудите пробен тренинг?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p data-i18n="faq_a6">Да! Нудиме бесплатен пробен тренинг за сите нови членови. Дојди во теретана, пријави се на рецепција и ќе добиеш бесплатен пристап за еден ден за да го испиташ нашето место и опремата.</p>
+                </div>
+            </div>
+            <div class="faq-item animate-in">
+                <button class="faq-question" aria-expanded="false">
+                    <span data-i18n="faq_q7">Каде се наоѓате и колку работите?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p data-i18n="faq_a7">Се наоѓаме на ул. Македонија бр. 23, 1000 Скопје. Работиме понеделник - петок од 06:00 до 23:00, а сабота и недела од 08:00 до 22:00.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Blog Section -->
 <section class="section blog" id="blog">
     <div class="container">
@@ -433,7 +510,7 @@
             <h2 class="section-title animate-in" data-i18n="blog_title">Најнови <span class="text-accent">статии</span>
             </h2>
         </div>
-        <div class="blog-grid">
+        <div class="blog-grid" id="blogGrid">
             <article class="blog-card blog-featured animate-in">
                 <div class="blog-image">
                     <img src="images/blog-nutrition.jpg" alt="Nutrition Guide">
@@ -538,6 +615,7 @@
                     <button type="submit" class="btn btn-primary btn-submit magnetic-btn" data-i18n="contact_submit">
                         Испрати порака
                     </button>
+                    <p class="contact-response-note" data-i18n="contact_response_time">Обично одговараме во рок од 24 часа за време на работните денови.</p>
                     <div class="form-success" id="formSuccess">
                         <i class="fas fa-check-circle"></i>
                         <p data-i18n="contact_success">Вашата порака е успешно испратена! Ќе ви одговориме најбрзо што
@@ -637,6 +715,10 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Fierce Fitness. <span data-i18n="footer_rights">Сите права задржани.</span></p>
+            <div class="footer-legal">
+                <a href="privacy-policy.html" data-i18n="footer_privacy">Privacy Policy</a>
+                <a href="#faq" data-i18n="footer_faq">FAQ</a>
+            </div>
         </div>
     </div>
 </footer>
@@ -759,6 +841,12 @@
     <i class="fas fa-check-circle"></i>
     <span id="toastMessage"></span>
 </div>
+
+<!-- Sticky Mobile CTA -->
+<a href="#pricing" class="sticky-mobile-cta" id="stickyMobileCta">
+    <i class="fas fa-fire"></i>
+    <span data-i18n="sticky_cta">Приклучи се</span>
+</a>
 
 <script src="script.js?v=5"></script>
 <div id="google_translate_element"></div>

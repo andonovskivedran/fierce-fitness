@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy.orm import selectinload
 from typing import List, Optional
 from pydantic import BaseModel
 
@@ -19,19 +20,45 @@ class BlogPostUpdate(BaseModel):
     category: Optional[str] = None
 
 
+def _enrich_blog(blog: BlogPost) -> dict:
+    author_name = ""
+    if blog.author and blog.author.user:
+        author_name = f"{blog.author.user.first_name} {blog.author.user.last_name}"
+    return {
+        "id": blog.id,
+        "title": blog.title,
+        "content": blog.content,
+        "category": blog.category,
+        "created_at": blog.created_at,
+        "trainer_id": blog.trainer_id,
+        "author_name": author_name,
+    }
+
+
 @router.get("/", response_model=List[BlogPostOut])
-async def get_all_blogs(db: AsyncSession = Depends(get_db), skip: int = 0, limit: int = 10):
-    result = await db.execute(select(BlogPost).offset(skip).limit(limit))
-    return result.scalars().all()
+async def get_all_blogs(db: AsyncSession = Depends(get_db), skip: int = Query(default=0, ge=0), limit: int = Query(default=10, ge=1, le=100)):
+    result = await db.execute(
+        select(BlogPost)
+        .options(selectinload(BlogPost.author).selectinload(Trainer.user))
+        .order_by(BlogPost.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+    )
+    blogs = result.scalars().all()
+    return [_enrich_blog(b) for b in blogs]
 
 
 @router.get("/{id}", response_model=BlogPostOut)
 async def get_blog(id: int, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(BlogPost).where(BlogPost.id == id))
+    result = await db.execute(
+        select(BlogPost)
+        .where(BlogPost.id == id)
+        .options(selectinload(BlogPost.author).selectinload(Trainer.user))
+    )
     blog = result.scalars().first()
     if not blog:
         raise HTTPException(status_code=404, detail="Blog not found")
-    return blog
+    return _enrich_blog(blog)
 
 
 @router.post("/", response_model=BlogPostOut, status_code=status.HTTP_201_CREATED)
@@ -75,7 +102,13 @@ async def create_blog(
     await db.commit()
     await db.refresh(new_blog)
 
-    return new_blog
+    result = await db.execute(
+        select(BlogPost)
+        .where(BlogPost.id == new_blog.id)
+        .options(selectinload(BlogPost.author).selectinload(Trainer.user))
+    )
+    blog = result.scalars().first()
+    return _enrich_blog(blog)
 
 
 @router.put("/{id}", response_model=BlogPostOut)
@@ -88,7 +121,11 @@ async def update_blog(
     if current_user.role not in [RoleEnum.trainer, RoleEnum.admin]:
         raise HTTPException(status_code=403, detail="Not enough permissions")
 
-    result = await db.execute(select(BlogPost).where(BlogPost.id == id))
+    result = await db.execute(
+        select(BlogPost)
+        .where(BlogPost.id == id)
+        .options(selectinload(BlogPost.author).selectinload(Trainer.user))
+    )
     blog = result.scalars().first()
     if not blog:
         raise HTTPException(status_code=404, detail="Blog not found")
@@ -107,7 +144,14 @@ async def update_blog(
 
     await db.commit()
     await db.refresh(blog)
-    return blog
+
+    result = await db.execute(
+        select(BlogPost)
+        .where(BlogPost.id == id)
+        .options(selectinload(BlogPost.author).selectinload(Trainer.user))
+    )
+    blog = result.scalars().first()
+    return _enrich_blog(blog)
 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)

@@ -1,4 +1,5 @@
 import asyncio
+import os
 from app.core.database import AsyncSessionLocal
 from app.core.security import get_password_hash
 from app.models.user import User, RoleEnum
@@ -7,7 +8,12 @@ from sqlalchemy.future import select
 
 async def create_seed_data():
     async with AsyncSessionLocal() as db:
-        # Create admin if not exists
+        admin_email = os.getenv("ADMIN_EMAIL", "admin@fiercefitness.com")
+        admin_password = os.getenv("ADMIN_PASSWORD")
+        if not admin_password:
+            print("WARNING: ADMIN_PASSWORD env var not set. Skipping admin creation.")
+            return
+
         result = await db.execute(
             select(User).where(User.role == RoleEnum.admin)
         )
@@ -15,17 +21,16 @@ async def create_seed_data():
             admin = User(
                 first_name="Admin",
                 last_name="Fierce",
-                email="admin@fiercefitness.com",
-                hashed_password=get_password_hash("admin123!"),
+                email=admin_email,
+                hashed_password=get_password_hash(admin_password),
                 role=RoleEnum.admin,
                 is_active=True
             )
             db.add(admin)
-            print("Admin created: admin@fiercefitness.com / admin123!")
+            print(f"Admin created: {admin_email}")
         else:
             print("Admin already exists.")
 
-        # Create membership plans if not exists
         plans_result = await db.execute(select(MembershipPlan))
         if not plans_result.scalars().first():
             plans = [

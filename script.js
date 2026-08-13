@@ -8,13 +8,25 @@ async function api(path, options = {}) {
     const token = localStorage.getItem("token");
     const headers = { "Content-Type": "application/json", ...options.headers };
     if (token) headers["Authorization"] = `Bearer ${token}`;
-    const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+    let res;
+    try {
+        res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+    } catch (e) {
+        throw new Error("Серверот не е достапен. Проверете дали backend е вклучен.");
+    }
     if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         throw new Error(err.detail || `HTTP ${res.status}`);
     }
     if (res.status === 204) return null;
     return res.json();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
 }
 
 function showToast(message, isError = false) {
@@ -360,6 +372,8 @@ document.addEventListener('DOMContentLoaded', () => {
     safeInit(initPricingButtons);
     safeInit(initThemeToggle);
     safeInit(initTranslateDropdown);
+    safeInit(initFAQ);
+    safeInit(loadBlogPosts);
     applyTranslations(currentLang);
     applyTheme(currentTheme);
     refreshAuthUI();
@@ -920,6 +934,37 @@ function initNewsletterForm() {
     });
 }
 
+// --- FAQ Accordion ---
+function initFAQ() {
+    document.querySelectorAll(".faq-question").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const item = btn.closest(".faq-item");
+            const isActive = item.classList.contains("active");
+            document.querySelectorAll(".faq-item.active").forEach(i => i.classList.remove("active"));
+            if (!isActive) item.classList.add("active");
+        });
+    });
+
+    const stickyCta = document.getElementById("stickyMobileCta");
+    if (stickyCta) {
+        const pricingSection = document.getElementById("pricing");
+        if (pricingSection) {
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        stickyCta.style.opacity = "0";
+                        stickyCta.style.pointerEvents = "none";
+                    } else {
+                        stickyCta.style.opacity = "1";
+                        stickyCta.style.pointerEvents = "auto";
+                    }
+                });
+            }, { threshold: 0.1 });
+            observer.observe(pricingSection);
+        }
+    }
+}
+
 // --- Auth Modal ---
 function initAuthModal() {
     const modal = document.getElementById("authModal");
@@ -956,10 +1001,15 @@ function initAuthModal() {
             const body = new URLSearchParams();
             body.append("username", document.getElementById("loginEmail").value);
             body.append("password", document.getElementById("loginPassword").value);
-            const res = await fetch(`${API_BASE}/auth/login`, {
-                method: "POST",
-                body
-            });
+            let res;
+            try {
+                res = await fetch(`${API_BASE}/auth/login`, {
+                    method: "POST",
+                    body
+                });
+            } catch (e) {
+                throw new Error("Серверот не е достапен. Проверете дали backend е вклучен.");
+            }
             if (!res.ok) {
                 const err = await res.json().catch(() => ({}));
                 throw new Error(err.detail || `HTTP ${res.status}`);
@@ -1093,7 +1143,7 @@ async function loadDashboard() {
             badge.textContent = active.status;
             badge.className = `plan-status-badge ${active.status.toLowerCase()}`;
 
-            const features = active.plan_features ? active.plan_features.split(",").map(f => `<div>✓ ${f.trim()}</div>`).join("") : "";
+            const features = active.plan_features ? active.plan_features.split(",").map(f => `<div>✓ ${escapeHtml(f.trim())}</div>`).join("") : "";
             document.getElementById("planCardFeatures").innerHTML = features;
 
             const card = document.querySelector(`[data-plan-id-card="${active.plan_id}"]`);
@@ -1114,9 +1164,9 @@ async function loadDashboard() {
             if (history) {
                 history.innerHTML = list.map(m => `
                     <div class="dashboard-history-item">
-                        <span class="history-plan-name">${m.plan_name}</span>
+                        <span class="history-plan-name">${escapeHtml(m.plan_name)}</span>
                         <span>${new Date(m.start_date).toLocaleDateString("mk-MK")}</span>
-                        <span class="history-status ${m.status.toLowerCase()}">${m.status}</span>
+                        <span class="history-status ${escapeHtml(m.status.toLowerCase())}">${escapeHtml(m.status)}</span>
                     </div>
                 `).join("");
             }
@@ -1133,9 +1183,9 @@ async function loadDashboard() {
             if (history && list.length) {
                 history.innerHTML = list.map(m => `
                     <div class="dashboard-history-item">
-                        <span class="history-plan-name">${m.plan_name}</span>
+                        <span class="history-plan-name">${escapeHtml(m.plan_name)}</span>
                         <span>${new Date(m.start_date).toLocaleDateString("mk-MK")}</span>
-                        <span class="history-status ${m.status.toLowerCase()}">${m.status}</span>
+                        <span class="history-status ${escapeHtml(m.status.toLowerCase())}">${escapeHtml(m.status)}</span>
                     </div>
                 `).join("");
             } else if (history) {
@@ -1241,3 +1291,102 @@ document.addEventListener("click", function(e) {
         return;
     }
 }, true);
+
+// --- Dynamic Trainers ---
+const FALLBACK_TRAINERS = [
+    { first_name: "Андреј", last_name: "Димовски", specialty: "Head Coach", bio: "Специјализиран за Strength & Conditioning", image_url: "images/trainer1.jpg", instagram_url: null, facebook_url: null },
+    { first_name: "Марија", last_name: "Јаневска", specialty: "HIIT & Functional Coach", bio: "Специјализирана за кардио и функционален тренинг", image_url: "images/trainer2.jpg", instagram_url: null, facebook_url: null },
+    { first_name: "Никола", last_name: "Стојанов", specialty: "Coach", bio: "Специјализиран за Bodybuilding & Nutrition", image_url: "images/trainer3.jpg", instagram_url: null, facebook_url: null },
+    { first_name: "Ивана", last_name: "Костова", specialty: "Yoga & Flexibility Coach", bio: "Специјализирана за мобилност и релаксација", image_url: "images/trainer4.jpg", instagram_url: null, facebook_url: null },
+];
+
+function renderTrainerCard(trainer, index) {
+    const name = escapeHtml(`${trainer.first_name} ${trainer.last_name}`);
+    const img = trainer.image_url || `images/trainer${(index % 4) + 1}.jpg`;
+    const instagram = trainer.instagram_url ? `<a href="${escapeHtml(trainer.instagram_url)}" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>` : "";
+    const facebook = trainer.facebook_url ? `<a href="${escapeHtml(trainer.facebook_url)}" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>` : "";
+    const featured = index === 0 ? " trainer-card--featured" : "";
+    return `
+        <div class="trainer-card${featured} animate-in visible">
+            <div class="trainer-image">
+                <img src="${escapeHtml(img)}" alt="${name}">
+                <div class="trainer-socials">${instagram}${facebook}</div>
+            </div>
+            <div class="trainer-info">
+                <h3>${name}</h3>
+                <span class="trainer-role">${escapeHtml(trainer.specialty)}</span>
+                <p class="trainer-spec">${escapeHtml(trainer.bio)}</p>
+            </div>
+        </div>
+    `;
+}
+
+async function loadTrainers() {
+    const grid = document.getElementById("trainersGrid");
+    if (!grid) return;
+
+    let trainers = [];
+    try {
+        trainers = await api("/trainers/?limit=20");
+    } catch (e) {
+        console.warn("Failed to load trainers from API, keeping static content:", e);
+        return;
+    }
+
+    if (!trainers || trainers.length === 0) return;
+
+    grid.innerHTML = trainers.map((t, i) => renderTrainerCard(t, i)).join("");
+}
+
+// --- Dynamic Blog Posts ---
+const FALLBACK_BLOGS = [
+    { title: "Комплетен водич за исхрана при тренирање", content: "Дознај која е најдобрата исхрана за постигнување на твоите фитнес цели. Од макронутриенти до тајминг на оброци...", category: "Нутриција", created_at: "2026-05-15T00:00:00", author_name: "Андреј Димовски", image: "images/blog-nutrition.jpg" },
+    { title: "5 начини да останеш мотивиран", content: "", category: "Мотивација", created_at: "2026-05-10T00:00:00", author_name: "", image: "images/blog-motivation.jpg" },
+    { title: "Значењето на опоравувањето по тренинг", content: "", category: "Здравје", created_at: "2026-05-05T00:00:00", author_name: "", image: "images/blog-health.jpg" },
+    { title: "HIIT vs. Classic: што е подобро?", content: "", category: "Тренинг", created_at: "2026-05-01T00:00:00", author_name: "", image: "images/blog-training.jpg" },
+];
+
+const BLOG_IMAGES = ["images/blog-nutrition.jpg", "images/blog-motivation.jpg", "images/blog-health.jpg", "images/blog-training.jpg"];
+
+function renderBlogCard(blog, index, isFeatured) {
+    const date = new Date(blog.created_at).toLocaleDateString("mk-MK", { day: "numeric", month: "long", year: "numeric" });
+    const img = blog.image || BLOG_IMAGES[index % BLOG_IMAGES.length];
+    const featuredClass = isFeatured ? " blog-featured" : "";
+    const titleTag = isFeatured ? "h3" : "h4";
+    const meta = blog.author_name
+        ? `<span><i class="fas fa-calendar"></i> ${escapeHtml(date)}</span><span><i class="fas fa-user"></i> ${escapeHtml(blog.author_name)}</span>`
+        : `<span><i class="fas fa-calendar"></i> ${escapeHtml(date)}</span>`;
+    return `
+        <article class="blog-card${featuredClass} animate-in visible">
+            <div class="blog-image">
+                <img src="${escapeHtml(img)}" alt="${escapeHtml(blog.title)}">
+                <div class="blog-overlay">
+                    <span class="blog-read-more" data-i18n="blog_read_more">Прочитај повеќе →</span>
+                </div>
+                <span class="blog-category">${escapeHtml(blog.category)}</span>
+            </div>
+            <div class="blog-content">
+                <div class="blog-meta">${meta}</div>
+                <${titleTag}>${escapeHtml(blog.title)}</${titleTag}>
+                ${blog.content ? `<p>${escapeHtml(blog.content.substring(0, 150))}${blog.content.length > 150 ? "..." : ""}</p>` : ""}
+            </div>
+        </article>
+    `;
+}
+
+async function loadBlogPosts() {
+    const grid = document.getElementById("blogGrid");
+    if (!grid) return;
+
+    let blogs = [];
+    try {
+        blogs = await api("/blog/?limit=10");
+    } catch (e) {
+        console.warn("Failed to load blog posts from API, keeping static content:", e);
+        return;
+    }
+
+    if (!blogs || blogs.length === 0) return;
+
+    grid.innerHTML = blogs.map((b, i) => renderBlogCard(b, i, i === 0)).join("");
+}

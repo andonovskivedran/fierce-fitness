@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import List, Optional
@@ -20,7 +20,7 @@ class ProgramUpdate(BaseModel):
 
 
 @router.get("/", response_model=List[ProgramOut])
-async def get_all_programs(db: AsyncSession = Depends(get_db), skip: int = 0, limit: int = 20):
+async def get_all_programs(db: AsyncSession = Depends(get_db), skip: int = Query(default=0, ge=0), limit: int = Query(default=20, ge=1, le=100)):
     result = await db.execute(select(Program).offset(skip).limit(limit))
     return result.scalars().all()
 
