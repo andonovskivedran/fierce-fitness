@@ -374,6 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
     safeInit(initTranslateDropdown);
     safeInit(initFAQ);
     safeInit(loadBlogPosts);
+    safeInit(loadTrainers);
     applyTranslations(currentLang);
     applyTheme(currentTheme);
     refreshAuthUI();

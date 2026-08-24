@@ -10,12 +10,17 @@ from app.api.routers import contact, newsletter, auth, blog, trainer, membership
 app = FastAPI(
     title="Fierce Fitness API",
     description="Backend API for the Fierce Fitness app",
-    version="1.0.0"
+    version="1.0.0",
+    docs_url="/docs",
+    openapi_url="/openapi.json"
 )
 
 ALLOWED_ORIGINS = os.getenv(
     "ALLOWED_ORIGINS",
-    "http://localhost:8000,http://127.0.0.1:8000,http://localhost:3000,http://127.0.0.1:3000,http://localhost:5500,http://127.0.0.1:5500"
+    "http://localhost:8000,http://127.0.0.1:8000,"
+    "http://localhost:5173,http://127.0.0.1:5173,"
+    "http://localhost:3000,http://127.0.0.1:3000,"
+    "http://localhost:5500,http://127.0.0.1:5500"
 ).split(",")
 
 app.add_middleware(
@@ -31,21 +36,27 @@ app.add_middleware(
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         response: Response = await call_next(request)
+
+        if request.url.path in ["/docs", "/redoc", "/openapi.json"]:
+            return response
+
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
         response.headers["X-XSS-Protection"] = "1; mode=block"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+
         if os.getenv("ENVIRONMENT") == "production":
             response.headers["Strict-Transport-Security"] = "max-age=63072000; includeSubDomains"
+
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://translate.google.com https://translate.googleapis.com; "
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; "
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://translate.google.com https://translate.googleapis.com https://cdn.jsdelivr.net; "
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; "
             "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; "
             "img-src 'self' data: https:; "
             "frame-src https://www.google.com https://www.google.com/maps; "
-            "connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 http://localhost:5500 http://127.0.0.1:5500 http://localhost:3000 http://127.0.0.1:3000"
+            "connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 http://localhost:5173 http://127.0.0.1:5173 http://localhost:5500 http://127.0.0.1:5500 http://localhost:3000 http://127.0.0.1:3000"
         )
         return response
 
@@ -59,10 +70,6 @@ class HTTPSRedirectMiddleware(BaseHTTPMiddleware):
                 url = str(request.url).replace("http://", "https://", 1)
                 return RedirectResponse(url, status_code=301)
         return await call_next(request)
-
-
-app.add_middleware(SecurityHeadersMiddleware)
-app.add_middleware(HTTPSRedirectMiddleware)
 
 
 _rate_limit_store: dict[str, list[float]] = defaultdict(list)
@@ -102,6 +109,8 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 
 
 app.add_middleware(RateLimitMiddleware)
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(HTTPSRedirectMiddleware)
 
 app.include_router(auth.router)
 app.include_router(blog.router)

@@ -15,4 +15,4 @@ class UserMembership(Base):
     is_active = Column(Boolean, default=True)
 
     user = relationship("User", back_populates="memberships")
-    plan = relationship("MembershipPlan")
+    plan = relationship("MembershipPlan",back_populates="user_memberships")
