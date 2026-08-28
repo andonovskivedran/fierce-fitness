@@ -1081,6 +1081,13 @@ input, textarea {
     grid-template-columns: repeat(4, 1fr);
     gap: 24px;
 }
+.trainer-card:nth-child(5) {
+    grid-column: 2;
+}
+
+.trainer-card:nth-child(6) {
+    grid-column: 3;
+}
 
 .trainer-card {
     background: var(--bg-card);
