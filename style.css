@@ -1081,6 +1081,13 @@ input, textarea {
     grid-template-columns: repeat(4, 1fr);
     gap: 24px;
 }
+.trainers-grid .trainer-card:nth-child(5) {
+    grid-column: 2;
+}
+
+.trainers-grid .trainer-card:nth-child(6) {
+    grid-column: 3;
+}
 
 .trainer-card {
     background: var(--bg-card);
@@ -1535,6 +1542,19 @@ input, textarea {
 }
 
 /* Contact Info */
+.locations {
+    display: flex;
+    gap: 30px;
+}
+
+.location {
+    flex: 1;
+}
+
+.location a {
+    color: var(--accent);
+    font-weight: 600;
+}
 .contact-info-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
