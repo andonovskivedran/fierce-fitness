@@ -1041,11 +1041,19 @@ input, textarea {
     grid-template-columns: repeat(4, 1fr);
     gap: 24px;
 }
+<<<<<<< HEAD
+.trainers-grid .trainer-card:nth-child(5) {
+    grid-column: 2;
+}
+
+.trainers-grid .trainer-card:nth-child(6) {
+=======
 .trainer-card:nth-child(5) {
     grid-column: 2;
 }
 
 .trainer-card:nth-child(6) {
+>>>>>>> 80d6dc1a37cca9ab0bd2e916e7d0bb94e83be430
     grid-column: 3;
 }
 
@@ -1502,6 +1510,19 @@ input, textarea {
 }
 
 /* Contact Info */
+.locations {
+    display: flex;
+    gap: 30px;
+}
+
+.location {
+    flex: 1;
+}
+
+.location a {
+    color: var(--accent);
+    font-weight: 600;
+}
 .contact-info-card {
     background: var(--bg-card);
     border: 1px solid var(--border);

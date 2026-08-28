@@ -101,28 +101,38 @@ const translations = {
         programs_title: 'Најди <span class="text-accent">својот</span> стил',
         programs_subtitle: "Разновидни програми дизајнирани за секоја цел и ниво",
         program_more: "Повеќе →",
-        program1_title: "Strength Training",
-        program1_desc: "Гради мускулна маса и сила со нашите модерни тегови и машини. Погодно за сите нивоа.",
-        program2_title: "HIIT",
-        program2_desc: "Интензивни интервални тренинзи за максимално согорување калории и подобрување на кондицијата.",
-        program3_title: "Functional Training",
-        program3_desc: "Вежби кои го подобруваат секојдневното движење, рамнотежата и флексибилноста.",
-        program4_title: "Personal Training",
-        program4_desc: "Индивидуални сесии со нашите најдобри тренери, целосно прилагодени на твоите цели.",
+        program1_title: "Lower body",
+        program1_desc: "Тежински тренинг кој се фокусира на градење на мускулна маса, сила и агилност на долниот дел од телото.",
+        program2_title: "Abs, upper & boxing",
+        program2_desc: "45 минути кардио и кондиционен тренинг. Се состои од удари на вреќа, учење техника, координација, баланс и вежби за издржливост со сопствена тежина. ",
+        program3_title: "Total body",
+        program3_desc: "Интензивен тренинг кој е комбинација од hiit, кардио и тежински програми. Ја подобрува кондицијата, издржливоста и се фокусира на градење мускулна сила и маса. ",
+        program4_title: "Group therapy boxing 45'",
+        program4_desc: "45 минути кардио и кондиционен тренинг. Се состои од удари на вреќа, учење техника, координација, баланс и вежби за издржливост со сопствена тежина. ",
         // Trainers
         trainers_tag: "ТРЕНЕРИ",
         trainers_title: 'Експерти кои те <span class="text-accent">водат</span>',
         trainers_subtitle: "Нашите сертифицирани професионалци се тука да те водат кон успех",
         trainer1_role: "Head Coach",
+<<<<<<< HEAD
+        trainer1_spec: "Посветена на вистински резултати и на пренесување на енергијата и мотивацијата што ги носи тренингот",
+        trainer2_role: "Coach",
+        trainer2_spec: "Посветена на создавање мотивирачка атмосфера во која секој тренинг носи нов предизвик и напредок.",
+=======
         trainer1_spec: "Посветена на вистински резултати и пренесување на енергијата и мотивацијата што ги носи тренингот",
         trainer2_role: "Coach",
         trainer2_spec: " Посветена на создавање мотивирачка атмосфера во која секој тренинг носи нов предизвик и напредок.",
+>>>>>>> 80d6dc1a37cca9ab0bd2e916e7d0bb94e83be430
         trainer3_role: "Coach",
         trainer3_spec: "Верува дека континуитетот и правилниот пристап се клучот до долгорочен напредок.",
         trainer4_role: "Coach",
         trainer4_spec: "Со позитивен пристап и мотивација, го претвора секој тренинг во чекор кон подобра верзија од себе.",
         trainer5_role: "Coach",
+<<<<<<< HEAD
+        trainer5_spec: "Со посветеност и позитивна енергија, го прави секој тренинг чекор поблиску до целта",
+=======
         trainer5_spec: "Со посветеност и позитивна енергија, го прави секој тренинг чекор поблиску до целта.",
+>>>>>>> 80d6dc1a37cca9ab0bd2e916e7d0bb94e83be430
         trainer6_role: "Coach",
         trainer6_spec: "Верува во дисциплина, посветеност и мали секојдневни победи што водат до големи резултати.",
         // Pricing
@@ -179,6 +189,9 @@ const translations = {
         contact_info_phone: "Телефон",
         contact_info_email: "Email",
         contact_info_hours: "Работно време",
+<<<<<<< HEAD
+        contact_hours_detail: "Понеделник - петок 07.00 - 21.00<br>Саб 09.00 - 15.00",
+=======
         contact_hours_detail: "Пон - Пет: 06:00 - 23:00<br>Саб - Нед: 08:00 - 22:00",
         // Dashboard
         dash_no_plan: "Немате активен план",
@@ -195,6 +208,7 @@ const translations = {
         dash_plan_switched: "Планот е сменет!",
         confirm_cancel: "Откажи",
         confirm_ok: "Потврди",
+>>>>>>> 80d6dc1a37cca9ab0bd2e916e7d0bb94e83be430
         // Footer
         footer_desc: "Најсилниот фитнес центар во Скопје. Изгради ја својата најсилна верзија со нас.",
         footer_quick_links: "Брзи линкови",
@@ -242,13 +256,13 @@ const translations = {
         programs_title: 'Find your <span class="text-accent">style</span>',
         programs_subtitle: "Diverse programs designed for every goal and level",
         program_more: "Learn more →",
-        program1_title: "Strength Training",
+        program1_title: "Lower body",
         program1_desc: "Build muscle mass and strength with our modern weights and machines. Suitable for all levels.",
-        program2_title: "HIIT",
+        program2_title: "Abs, upper & boxing",
         program2_desc: "High-intensity interval training for maximum calorie burning and improved conditioning.",
-        program3_title: "Functional Training",
+        program3_title: "Total body",
         program3_desc: "Exercises that improve everyday movement, balance, and flexibility.",
-        program4_title: "Personal Training",
+        program4_title: "Group therapy boxing 45'",
         program4_desc: "Individual sessions with our top trainers, fully tailored to your goals.",
         // Trainers
         trainers_tag: "TRAINERS",
@@ -259,7 +273,7 @@ const translations = {
         trainer2_role: "HIIT & Functional Coach",
         trainer2_spec: "Specialized in cardio and functional training",
         trainer3_role: "Coach",
-        trainer3_spec: "Specialized in Bodybuilding & Nutrition",
+        trainer3_spec: "Верува дека континуитетот и правилниот пристап се клучот до долгорочен напредок.",
         trainer4_role: "Yoga & Flexibility Coach",
         trainer4_spec: "Specialized in mobility and relaxation",
         // Pricing
@@ -273,7 +287,7 @@ const translations = {
         pricing_basic_f1: "Gym access",
         pricing_basic_f2: "Basic group classes",
         pricing_basic_f3: "Sauna",
-        pricing_basic_f4: "Personal Training",
+        pricing_basic_f4: "Group therapy boxing 45'",
         pricing_basic_f5: "Nutrition plan",
         pricing_basic_f6: "Massage",
         pricing_premium_name: "Premium",
