@@ -3,6 +3,7 @@ from .user import User
 from .trainer import Trainer
 from .program import Program
 from .membership import MembershipPlan
+from .user_membership import UserMembership
 from .appointment import Appointment
 from .blog import BlogPost
 from .contact import ContactMessage
