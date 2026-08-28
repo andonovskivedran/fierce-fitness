@@ -2,6 +2,71 @@
    FIERCE FITNESS - Main JavaScript
    ============================================ */
 
+const API_BASE = "http://localhost:8000";
+
+async function api(path, options = {}) {
+    const token = localStorage.getItem("token");
+    const headers = { "Content-Type": "application/json", ...options.headers };
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+    let res;
+    try {
+        res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+    } catch (e) {
+        throw new Error("Серверот не е достапен. Проверете дали backend е вклучен.");
+    }
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.detail || `HTTP ${res.status}`);
+    }
+    if (res.status === 204) return null;
+    return res.json();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+}
+
+function showToast(message, isError = false) {
+    const t = document.getElementById("toast");
+    const m = document.getElementById("toastMessage");
+    const i = t.querySelector("i");
+    m.textContent = message;
+    i.className = isError ? "fas fa-exclamation-circle" : "fas fa-check-circle";
+    t.classList.toggle("error", isError);
+    t.classList.add("show");
+    clearTimeout(t._timeout);
+    t._timeout = setTimeout(() => t.classList.remove("show"), 3000);
+}
+
+function showConfirmModal(message) {
+    return new Promise(resolve => {
+        const modal = document.getElementById("confirmModal");
+        const msgEl = document.getElementById("confirmModalMessage");
+        const okBtn = document.getElementById("confirmModalOk");
+        const cancelBtn = document.getElementById("confirmModalCancel");
+        const overlay = document.getElementById("confirmModalOverlay");
+        msgEl.textContent = message;
+        okBtn.textContent = translations[currentLang]?.confirm_ok || "Потврди";
+        cancelBtn.textContent = translations[currentLang]?.confirm_cancel || "Откажи";
+        modal.classList.add("show");
+        function cleanup(result) {
+            modal.classList.remove("show");
+            okBtn.removeEventListener("click", onOk);
+            cancelBtn.removeEventListener("click", onCancel);
+            overlay.removeEventListener("click", onCancel);
+            resolve(result);
+        }
+        function onOk() { cleanup(true); }
+        function onCancel() { cleanup(false); }
+        okBtn.addEventListener("click", onOk);
+        cancelBtn.addEventListener("click", onCancel);
+        overlay.addEventListener("click", onCancel);
+    });
+}
+
 // --- Translations ---
 const translations = {
     mk: {
@@ -115,6 +180,21 @@ const translations = {
         contact_info_email: "Email",
         contact_info_hours: "Работно време",
         contact_hours_detail: "Пон - Пет: 06:00 - 23:00<br>Саб - Нед: 08:00 - 22:00",
+        // Dashboard
+        dash_no_plan: "Немате активен план",
+        dash_browse: "Прелистај планови",
+        dash_current: "Тековен",
+        dash_activate: "Активирај",
+        dash_deactivate: "Деактивирај",
+        dash_switch: "Промени план",
+        dash_switch_confirm: "Веќе имате активен план. Дали сакате да го смените?",
+        pricing_switch_confirm: "Веќе имате активен план ({oldPlan}). Дали сакате да го смените за {newPlan}?",
+        dash_deactivate_confirm: "Дали сте сигурни дека сакате да го деактивирате планот?",
+        dash_plan_activated: "Планот е активиран!",
+        dash_plan_deactivated: "Планот е деактивиран!",
+        dash_plan_switched: "Планот е сменет!",
+        confirm_cancel: "Откажи",
+        confirm_ok: "Потврди",
         // Footer
         footer_desc: "Најсилниот фитнес центар во Скопје. Изгради ја својата најсилна верзија со нас.",
         footer_quick_links: "Брзи линкови",
@@ -237,6 +317,21 @@ const translations = {
         contact_info_email: "Email",
         contact_info_hours: "Working hours",
         contact_hours_detail: "Mon - Fri: 06:00 - 23:00<br>Sat - Sun: 08:00 - 22:00",
+        // Dashboard
+        dash_no_plan: "You have no active plan",
+        dash_browse: "Browse plans",
+        dash_current: "Current",
+        dash_activate: "Activate",
+        dash_deactivate: "Deactivate",
+        dash_switch: "Switch plan",
+        dash_switch_confirm: "You already have an active plan. Do you want to switch?",
+        pricing_switch_confirm: "You already have an active plan ({oldPlan}). Do you want to switch to {newPlan}?",
+        dash_deactivate_confirm: "Are you sure you want to deactivate your plan?",
+        dash_plan_activated: "Plan activated!",
+        dash_plan_deactivated: "Plan deactivated!",
+        dash_plan_switched: "Plan switched!",
+        confirm_cancel: "Cancel",
+        confirm_ok: "Confirm",
         // Footer
         footer_desc: "The strongest fitness center in Skopje. Build your strongest version with us.",
         footer_quick_links: "Quick Links",
@@ -261,25 +356,32 @@ let currentTheme = localStorage.getItem('fierce-theme') || 'dark';
 
 // --- DOM Ready ---
 document.addEventListener('DOMContentLoaded', () => {
-    initLoader();
-    initCursor();
-    initCookieBanner();
-    initNavbar();
-    initHamburger();
-    initLanguage();
-    initSmoothScroll();
-    initScrollAnimations();
-    initCounterAnimation();
-    initMagneticButtons();
-    initRippleEffect();
-    initHeroSpotlight();
-    initProgramsSlider();
-    initContactForm();
-    initNewsletterForm();
-    initThemeToggle();
-    initTranslateDropdown();
+    const safeInit = (fn) => { try { fn(); } catch(e) { console.error(fn.name, e); } };
+    safeInit(initLoader);
+    safeInit(initCursor);
+    safeInit(initCookieBanner);
+    safeInit(initNavbar);
+    safeInit(initHamburger);
+    safeInit(initLanguage);
+    safeInit(initSmoothScroll);
+    safeInit(initScrollAnimations);
+    safeInit(initCounterAnimation);
+    safeInit(initMagneticButtons);
+    safeInit(initRippleEffect);
+    safeInit(initHeroSpotlight);
+    safeInit(initProgramsSlider);
+    safeInit(initContactForm);
+    safeInit(initNewsletterForm);
+    safeInit(initAuthModal);
+    safeInit(initPricingButtons);
+    safeInit(initThemeToggle);
+    safeInit(initTranslateDropdown);
+    safeInit(initFAQ);
+    safeInit(loadBlogPosts);
+    safeInit(loadTrainers);
     applyTranslations(currentLang);
     applyTheme(currentTheme);
+    refreshAuthUI();
 });
 
 // --- Loading Screen ---
@@ -416,6 +518,7 @@ function initHamburger() {
 function initLanguage() {
     const toggle = document.getElementById('langToggle');
     const label = document.getElementById('langLabel');
+    if (!toggle || !label) return;
 
     // Set initial state
     if (currentLang === 'en') {
@@ -766,45 +869,32 @@ function initProgramsSlider() {
 // --- Contact Form Validation ---
 function initContactForm() {
     const form = document.getElementById('contactForm');
-    const successMsg = document.getElementById('formSuccess');
     if (!form) return;
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        let isValid = true;
+        const btn = form.querySelector("button[type=submit]");
+        const orig = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = "Се испраќа...";
 
-        const name = document.getElementById('formName');
-        const email = document.getElementById('formEmail');
-        const message = document.getElementById('formMessage');
-
-        // Reset errors
-        [name, email, message].forEach(input => {
-            input.closest('.form-group').classList.remove('error');
-        });
-
-        // Validate name
-        if (!name.value.trim()) {
-            name.closest('.form-group').classList.add('error');
-            isValid = false;
-        }
-
-        // Validate email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email.value.trim())) {
-            email.closest('.form-group').classList.add('error');
-            isValid = false;
-        }
-
-        // Validate message
-        if (!message.value.trim()) {
-            message.closest('.form-group').classList.add('error');
-            isValid = false;
-        }
-
-        if (isValid) {
-            form.style.display = 'none';
-            successMsg.classList.add('show');
+        try {
+            await api("/contact/", {
+                method: "POST",
+                body: JSON.stringify({
+                    name: document.getElementById("formName").value,
+                    email: document.getElementById("formEmail").value,
+                    subject: "Contact Form",
+                    message: document.getElementById("formMessage").value
+                })
+            });
+            showToast("Пораката е испратена!");
             form.reset();
+        } catch (err) {
+            showToast(err.message || "Грешка при испраќање", true);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = orig;
         }
     });
 
@@ -819,16 +909,22 @@ function initContactForm() {
 // --- Newsletter Form ---
 function initNewsletterForm() {
     const form = document.getElementById('newsletterForm');
-    const successIcon = document.getElementById('newsletterSuccess');
     if (!form) return;
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const input = form.querySelector('input');
         const submitBtn = form.querySelector('button');
-        if (input.value.trim()) {
+        if (!input.value.trim()) return;
+
+        try {
+            await api("/newsletter/", {
+                method: "POST",
+                body: JSON.stringify({ email: input.value })
+            });
+            showToast("Се попиште за newsletter!");
             input.value = '';
-            // Show success checkmark
+            const successIcon = document.getElementById('newsletterSuccess');
             if (successIcon) {
                 successIcon.classList.add('show');
                 submitBtn.style.opacity = '0';
@@ -837,6 +933,465 @@ function initNewsletterForm() {
                     submitBtn.style.opacity = '1';
                 }, 2500);
             }
+        } catch (err) {
+            showToast(err.message || "Грешка", true);
         }
     });
+}
+
+// --- FAQ Accordion ---
+function initFAQ() {
+    document.querySelectorAll(".faq-question").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const item = btn.closest(".faq-item");
+            const isActive = item.classList.contains("active");
+            document.querySelectorAll(".faq-item.active").forEach(i => i.classList.remove("active"));
+            if (!isActive) item.classList.add("active");
+        });
+    });
+
+    const stickyCta = document.getElementById("stickyMobileCta");
+    if (stickyCta) {
+        const pricingSection = document.getElementById("pricing");
+        if (pricingSection) {
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        stickyCta.style.opacity = "0";
+                        stickyCta.style.pointerEvents = "none";
+                    } else {
+                        stickyCta.style.opacity = "1";
+                        stickyCta.style.pointerEvents = "auto";
+                    }
+                });
+            }, { threshold: 0.1 });
+            observer.observe(pricingSection);
+        }
+    }
+}
+
+// --- Auth Modal ---
+function initAuthModal() {
+    const modal = document.getElementById("authModal");
+    const userBtn = document.getElementById("userBtn");
+    const closeBtn = document.getElementById("authModalClose");
+    const overlay = document.getElementById("authModalOverlay");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const tabs = document.querySelectorAll(".auth-tab");
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+
+    function openModal() { modal.classList.add("show"); refreshAuthUI(); }
+    function closeModal() { modal.classList.remove("show"); }
+
+    userBtn.addEventListener("click", openModal);
+    closeBtn.addEventListener("click", closeModal);
+    overlay.addEventListener("click", closeModal);
+
+    tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+            tabs.forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+            const isLogin = tab.dataset.tab === "login";
+            loginForm.style.display = isLogin ? "block" : "none";
+            registerForm.style.display = isLogin ? "none" : "block";
+        });
+    });
+
+    loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const errEl = document.getElementById("loginError");
+        errEl.textContent = "";
+        try {
+            const body = new URLSearchParams();
+            body.append("username", document.getElementById("loginEmail").value);
+            body.append("password", document.getElementById("loginPassword").value);
+            let res;
+            try {
+                res = await fetch(`${API_BASE}/auth/login`, {
+                    method: "POST",
+                    body
+                });
+            } catch (e) {
+                throw new Error("Серверот не е достапен. Проверете дали backend е вклучен.");
+            }
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(err.detail || `HTTP ${res.status}`);
+            }
+            const data = await res.json();
+            localStorage.setItem("token", data.access_token);
+            localStorage.setItem("user", JSON.stringify(data.user));
+            showToast(`Добредојде, ${data.user.first_name}!`);
+            closeModal();
+            refreshAuthUI();
+            if (window._pendingPlanId) {
+                const pid = window._pendingPlanId;
+                window._pendingPlanId = null;
+                await handlePricingClick(pid);
+            }
+        } catch (err) {
+            errEl.textContent = err.message || "Грешка при најава";
+        }
+    });
+
+    registerForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const errEl = document.getElementById("registerError");
+        errEl.textContent = "";
+        try {
+            const data = await api("/auth/register", {
+                method: "POST",
+                body: JSON.stringify({
+                    email: document.getElementById("regEmail").value,
+                    password: document.getElementById("regPassword").value,
+                    first_name: document.getElementById("regFirstName").value,
+                    last_name: document.getElementById("regLastName").value
+                })
+            });
+            localStorage.setItem("token", data.access_token);
+            localStorage.setItem("user", JSON.stringify(data.user));
+            showToast(`Добредојде, ${data.user.first_name}!`);
+            closeModal();
+            refreshAuthUI();
+            if (window._pendingPlanId) {
+                const pid = window._pendingPlanId;
+                window._pendingPlanId = null;
+                await handlePricingClick(pid);
+            }
+        } catch (err) {
+            errEl.textContent = err.message || "Грешка при регистрација";
+        }
+    });
+
+    logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        showToast("Одјавен");
+        refreshAuthUI();
+        closeModal();
+    });
+
+    const deactivateBtn = document.getElementById("deactivatePlanBtn");
+    if (deactivateBtn) {
+        deactivateBtn.addEventListener("click", async () => {
+            const msg = translations[currentLang]?.dash_deactivate_confirm || "Дали сте сигурни дека сакате да го деактивирате планот?";
+            if (!await showConfirmModal(msg)) return;
+            try {
+                await api("/memberships/deactivate", { method: "POST" });
+                showToast(translations[currentLang]?.dash_plan_deactivated || "Планот е деактивиран!");
+                loadDashboard();
+            } catch (err) {
+                showToast(err.message || "Грешка", true);
+            }
+        });
+    }
+
+    const browseBtn = document.getElementById("dashBrowsePlans");
+    if (browseBtn) {
+        browseBtn.addEventListener("click", () => {
+            closeModal();
+        });
+    }
+}
+
+function refreshAuthUI() {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    const loggedOut = document.getElementById("authLoggedOut");
+    const loggedIn = document.getElementById("authLoggedIn");
+    const userBtn = document.getElementById("userBtn");
+    const userBtnLabel = document.getElementById("userBtnLabel");
+
+    if (token && user) {
+        loggedOut.style.display = "none";
+        loggedIn.style.display = "block";
+        document.getElementById("authUserName").textContent = `${user.first_name} ${user.last_name}`;
+        document.getElementById("authUserRole").textContent = user.role;
+        userBtn.classList.add("logged-in");
+        if (userBtnLabel) userBtnLabel.textContent = user.first_name;
+
+        loadDashboard();
+    } else {
+        loggedOut.style.display = "block";
+        loggedIn.style.display = "none";
+        userBtn.classList.remove("logged-in");
+        if (userBtnLabel) userBtnLabel.textContent = "Најава";
+        clearPricingActiveStates();
+    }
+}
+
+function clearPricingActiveStates() {
+    document.querySelectorAll(".pricing-card").forEach(c => c.classList.remove("is-active"));
+}
+
+async function loadDashboard() {
+    const noPlan = document.getElementById("dashboardNoPlan");
+    const activePlan = document.getElementById("dashboardActivePlan");
+    const history = document.getElementById("dashboardHistory");
+
+    try {
+        const list = await api("/memberships/my");
+        const active = list.find(m => m.status === "ACTIVE");
+
+        clearPricingActiveStates();
+
+        if (active) {
+            noPlan.style.display = "none";
+            activePlan.style.display = "block";
+
+            document.getElementById("planCardName").textContent = active.plan_name;
+            document.getElementById("planCardPrice").textContent = `${active.plan_price} ден/месечно`;
+            document.getElementById("planCardDate").textContent = `Активиран: ${new Date(active.start_date).toLocaleDateString("mk-MK")}`;
+
+            const badge = document.getElementById("planStatusBadge");
+            badge.textContent = active.status;
+            badge.className = `plan-status-badge ${active.status.toLowerCase()}`;
+
+            const features = active.plan_features ? active.plan_features.split(",").map(f => `<div>✓ ${escapeHtml(f.trim())}</div>`).join("") : "";
+            document.getElementById("planCardFeatures").innerHTML = features;
+
+            const card = document.querySelector(`[data-plan-id-card="${active.plan_id}"]`);
+            if (card) card.classList.add("is-active");
+
+            document.querySelectorAll(".btn-pricing").forEach(btn => {
+                if (btn.dataset.planId == active.plan_id) {
+                    btn.textContent = translations[currentLang]?.dash_current || "Тековен";
+                    btn.classList.add("btn-current");
+                    btn.disabled = true;
+                } else {
+                    btn.textContent = translations[currentLang]?.dash_switch || "Промени план";
+                    btn.classList.remove("btn-current");
+                    btn.disabled = false;
+                }
+            });
+
+            if (history) {
+                history.innerHTML = list.map(m => `
+                    <div class="dashboard-history-item">
+                        <span class="history-plan-name">${escapeHtml(m.plan_name)}</span>
+                        <span>${new Date(m.start_date).toLocaleDateString("mk-MK")}</span>
+                        <span class="history-status ${escapeHtml(m.status.toLowerCase())}">${escapeHtml(m.status)}</span>
+                    </div>
+                `).join("");
+            }
+        } else {
+            noPlan.style.display = "block";
+            activePlan.style.display = "none";
+
+            document.querySelectorAll(".btn-pricing").forEach(btn => {
+                btn.textContent = translations[currentLang]?.pricing_cta || "Избери план";
+                btn.classList.remove("btn-current");
+                btn.disabled = false;
+            });
+
+            if (history && list.length) {
+                history.innerHTML = list.map(m => `
+                    <div class="dashboard-history-item">
+                        <span class="history-plan-name">${escapeHtml(m.plan_name)}</span>
+                        <span>${new Date(m.start_date).toLocaleDateString("mk-MK")}</span>
+                        <span class="history-status ${escapeHtml(m.status.toLowerCase())}">${escapeHtml(m.status)}</span>
+                    </div>
+                `).join("");
+            } else if (history) {
+                history.innerHTML = "";
+            }
+        }
+    } catch (err) {
+        noPlan.style.display = "block";
+        activePlan.style.display = "none";
+    }
+}
+
+// --- Pricing Buttons ---
+async function handlePricingClick(planId) {
+    try {
+        let active = null;
+        try {
+            active = await api("/memberships/active");
+        } catch (_) { /* no active plan */ }
+
+        const planCard = document.querySelector(`[data-plan-id-card="${planId}"]`);
+        const newPlanName = planCard ? planCard.querySelector(".pricing-name")?.textContent : `#${planId}`;
+
+        if (active && active.plan_id && active.plan_id != planId) {
+            const oldPlanName = active.plan_name || `#${active.plan_id}`;
+            const msg = (translations[currentLang]?.pricing_switch_confirm || "Веќе имате активен план ({oldPlan}). Дали сакате да го смените за {newPlan}?")
+                .replace("{oldPlan}", oldPlanName)
+                .replace("{newPlan}", newPlanName);
+            if (!await showConfirmModal(msg)) return;
+            await api(`/memberships/switch?plan_id=${planId}`, { method: "POST" });
+            showToast(translations[currentLang]?.dash_plan_switched || "Планот е сменет!");
+        } else {
+            await api(`/memberships/subscribe?plan_id=${planId}`, { method: "POST" });
+            showToast(translations[currentLang]?.dash_plan_activated || "Планот е активиран!");
+        }
+        refreshAuthUI();
+    } catch (err) {
+        showToast(err.message || "Грешка", true);
+    }
+}
+
+function initPricingButtons() {
+    console.log("[FF] initPricingButtons called, buttons found:", document.querySelectorAll(".btn-pricing").length);
+    document.querySelectorAll(".btn-pricing").forEach(btn => {
+        btn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (btn.disabled) return;
+            console.log("[FF] pricing clicked, planId:", btn.dataset.planId);
+            const token = localStorage.getItem("token");
+            if (!token) {
+                window._pendingPlanId = btn.dataset.planId;
+                console.log("[FF] no token, opening modal");
+                document.getElementById("authModal").classList.add("show");
+                document.querySelector('[data-tab="login"]').click();
+                return;
+            }
+            const planId = btn.dataset.planId;
+            if (!planId) return;
+            await handlePricingClick(planId);
+        });
+    });
+}
+
+// --- Fallback: delegated click handler (works even if Google Translate modifies DOM) ---
+document.addEventListener("click", function(e) {
+    // Pricing buttons
+    const btn = e.target.closest(".btn-pricing");
+    if (btn && !btn.disabled) {
+        e.preventDefault();
+        e.stopPropagation();
+        const token = localStorage.getItem("token");
+        if (!token) {
+            window._pendingPlanId = btn.dataset.planId;
+            const modal = document.getElementById("authModal");
+            if (modal) {
+                modal.classList.add("show");
+                const loginTab = document.querySelector('[data-tab="login"]');
+                if (loginTab) loginTab.click();
+            }
+            return;
+        }
+        const planId = btn.dataset.planId;
+        if (!planId) return;
+        handlePricingClick(planId);
+        return;
+    }
+
+    // User button
+    if (e.target.closest("#userBtn")) {
+        const modal = document.getElementById("authModal");
+        if (modal) {
+            modal.classList.add("show");
+            refreshAuthUI();
+        }
+        return;
+    }
+
+    // Close modal
+    if (e.target.closest("#authModalClose") || e.target.id === "authModalOverlay") {
+        const modal = document.getElementById("authModal");
+        if (modal) modal.classList.remove("show");
+        return;
+    }
+}, true);
+
+// --- Dynamic Trainers ---
+const FALLBACK_TRAINERS = [
+    { first_name: "Андреј", last_name: "Димовски", specialty: "Head Coach", bio: "Специјализиран за Strength & Conditioning", image_url: "images/trainer1.jpg", instagram_url: null, facebook_url: null },
+    { first_name: "Марија", last_name: "Јаневска", specialty: "HIIT & Functional Coach", bio: "Специјализирана за кардио и функционален тренинг", image_url: "images/trainer2.jpg", instagram_url: null, facebook_url: null },
+    { first_name: "Никола", last_name: "Стојанов", specialty: "Coach", bio: "Специјализиран за Bodybuilding & Nutrition", image_url: "images/trainer3.jpg", instagram_url: null, facebook_url: null },
+    { first_name: "Ивана", last_name: "Костова", specialty: "Yoga & Flexibility Coach", bio: "Специјализирана за мобилност и релаксација", image_url: "images/trainer4.jpg", instagram_url: null, facebook_url: null },
+];
+
+function renderTrainerCard(trainer, index) {
+    const name = escapeHtml(`${trainer.first_name} ${trainer.last_name}`);
+    const img = trainer.image_url || `images/trainer${(index % 4) + 1}.jpg`;
+    const instagram = trainer.instagram_url ? `<a href="${escapeHtml(trainer.instagram_url)}" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>` : "";
+    const facebook = trainer.facebook_url ? `<a href="${escapeHtml(trainer.facebook_url)}" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>` : "";
+    const featured = index === 0 ? " trainer-card--featured" : "";
+    return `
+        <div class="trainer-card${featured} animate-in visible">
+            <div class="trainer-image">
+                <img src="${escapeHtml(img)}" alt="${name}">
+                <div class="trainer-socials">${instagram}${facebook}</div>
+            </div>
+            <div class="trainer-info">
+                <h3>${name}</h3>
+                <span class="trainer-role">${escapeHtml(trainer.specialty)}</span>
+                <p class="trainer-spec">${escapeHtml(trainer.bio)}</p>
+            </div>
+        </div>
+    `;
+}
+
+async function loadTrainers() {
+    const grid = document.getElementById("trainersGrid");
+    if (!grid) return;
+
+    let trainers = [];
+    try {
+        trainers = await api("/trainers/?limit=20");
+    } catch (e) {
+        console.warn("Failed to load trainers from API, keeping static content:", e);
+        return;
+    }
+
+    if (!trainers || trainers.length === 0) return;
+
+    grid.innerHTML = trainers.map((t, i) => renderTrainerCard(t, i)).join("");
+}
+
+// --- Dynamic Blog Posts ---
+const FALLBACK_BLOGS = [
+    { title: "Комплетен водич за исхрана при тренирање", content: "Дознај која е најдобрата исхрана за постигнување на твоите фитнес цели. Од макронутриенти до тајминг на оброци...", category: "Нутриција", created_at: "2026-05-15T00:00:00", author_name: "Андреј Димовски", image: "images/blog-nutrition.jpg" },
+    { title: "5 начини да останеш мотивиран", content: "", category: "Мотивација", created_at: "2026-05-10T00:00:00", author_name: "", image: "images/blog-motivation.jpg" },
+    { title: "Значењето на опоравувањето по тренинг", content: "", category: "Здравје", created_at: "2026-05-05T00:00:00", author_name: "", image: "images/blog-health.jpg" },
+    { title: "HIIT vs. Classic: што е подобро?", content: "", category: "Тренинг", created_at: "2026-05-01T00:00:00", author_name: "", image: "images/blog-training.jpg" },
+];
+
+const BLOG_IMAGES = ["images/blog-nutrition.jpg", "images/blog-motivation.jpg", "images/blog-health.jpg", "images/blog-training.jpg"];
+
+function renderBlogCard(blog, index, isFeatured) {
+    const date = new Date(blog.created_at).toLocaleDateString("mk-MK", { day: "numeric", month: "long", year: "numeric" });
+    const img = blog.image || BLOG_IMAGES[index % BLOG_IMAGES.length];
+    const featuredClass = isFeatured ? " blog-featured" : "";
+    const titleTag = isFeatured ? "h3" : "h4";
+    const meta = blog.author_name
+        ? `<span><i class="fas fa-calendar"></i> ${escapeHtml(date)}</span><span><i class="fas fa-user"></i> ${escapeHtml(blog.author_name)}</span>`
+        : `<span><i class="fas fa-calendar"></i> ${escapeHtml(date)}</span>`;
+    return `
+        <article class="blog-card${featuredClass} animate-in visible">
+            <div class="blog-image">
+                <img src="${escapeHtml(img)}" alt="${escapeHtml(blog.title)}">
+                <div class="blog-overlay">
+                    <span class="blog-read-more" data-i18n="blog_read_more">Прочитај повеќе →</span>
+                </div>
+                <span class="blog-category">${escapeHtml(blog.category)}</span>
+            </div>
+            <div class="blog-content">
+                <div class="blog-meta">${meta}</div>
+                <${titleTag}>${escapeHtml(blog.title)}</${titleTag}>
+                ${blog.content ? `<p>${escapeHtml(blog.content.substring(0, 150))}${blog.content.length > 150 ? "..." : ""}</p>` : ""}
+            </div>
+        </article>
+    `;
+}
+
+async function loadBlogPosts() {
+    const grid = document.getElementById("blogGrid");
+    if (!grid) return;
+
+    let blogs = [];
+    try {
+        blogs = await api("/blog/?limit=10");
+    } catch (e) {
+        console.warn("Failed to load blog posts from API, keeping static content:", e);
+        return;
+    }
+
+    if (!blogs || blogs.length === 0) return;
+
+    grid.innerHTML = blogs.map((b, i) => renderBlogCard(b, i, i === 0)).join("");
 }

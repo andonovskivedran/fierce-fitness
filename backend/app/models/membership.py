@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Text, Float
+from sqlalchemy.orm import relationship
 from .base import Base
 
 class MembershipPlan(Base):
@@ -8,3 +9,4 @@ class MembershipPlan(Base):
     name = Column(String, unique=True)
     price = Column(Float)
     features = Column(Text)
+    user_memberships = relationship("UserMembership",back_populates="plan")
