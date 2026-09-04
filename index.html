@@ -6,14 +6,65 @@
     <title>Fierce Fitness | Скопје, Северна Македонија</title>
     <meta name="description"
           content="Fierce Fitness - Најсилниот фитнес центар во Скопје. Тренирај со најдобрите, постигни ги своите цели.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Fierce Fitness | Скопје, Северна Македонија">
+    <meta property="og:description" content="Најсилниот фитнес центар во Скопје. Тренирај со најдобрите, постигни ги своите цели.">
+    <meta property="og:image" content="images/hero.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Fierce Fitness | Скопје, Северна Македонија">
+    <meta name="twitter:description" content="Најсилниот фитнес центар во Скопје. Тренирај со најдобрите, постигни ги своите цели.">
+    <meta name="twitter:image" content="images/hero.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
           rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "HealthClub",
+        "name": "Fierce Fitness",
+        "description": "Најсилниот фитнес центар во Скопје. Тренирај со најдобрите, постигни ги своите цели.",
+        "url": "https://fiercefitness.mk",
+        "telephone": "+38970227929",
+        "email": "info@fiercefitness.mk",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Ул. Македонија бр. 23",
+            "addressLocality": "Скопје",
+            "postalCode": "1000",
+            "addressCountry": "MK"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 41.9965,
+            "longitude": 21.4314
+        },
+        "openingHoursSpecification": [
+            {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                "opens": "06:00",
+                "closes": "23:00"
+            },
+            {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Saturday", "Sunday"],
+                "opens": "08:00",
+                "closes": "22:00"
+            }
+        ],
+        "image": "images/hero.jpg",
+        "priceRange": "$$"
+    }
+    </script>
 </head>
 <body>
+<!-- Skip Link -->
+<a href="#main" class="skip-link" data-i18n="skip_link">Прескокни до содржината</a>
+
 <!-- Loading Screen -->
 <div id="loader" class="loader">
     <div class="loader-inner">
@@ -57,11 +108,23 @@
             <li><a href="#programs" class="nav-link" data-i18n="nav_programs">Програми</a></li>
             <li><a href="#trainers" class="nav-link" data-i18n="nav_trainers">Тренери</a></li>
             <li><a href="#pricing" class="nav-link" data-i18n="nav_pricing">Членство</a></li>
-            <li><a href="#blog" class="nav-link" data-i18n="nav_blog">Блог</a></li>
             <li><a href="#faq" class="nav-link" data-i18n="nav_faq">ЧПП</a></li>
             <li><a href="#contact" class="nav-link" data-i18n="nav_contact">Контакт</a></li>
         </ul>
         <div class="nav-actions">
+            <div class="translate-wrapper" id="translateWrapper">
+                <button class="translate-btn" id="translateBtn" aria-label="Translate page">
+                    <i class="fas fa-globe"></i>
+                </button>
+                <div class="translate-dropdown" id="translateDropdown">
+                    <div class="translate-option active" data-lang="mk"><span class="flag">🇲🇰</span> Македонски</div>
+                    <div class="translate-option" data-lang="en"><span class="flag">🇬🇧</span> English</div>
+                    <div class="translate-option" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</div>
+                    <div class="translate-option" data-lang="fr"><span class="flag">🇫🇷</span> Français</div>
+                    <div class="translate-option" data-lang="sq"><span class="flag">🇦🇱</span> Shqip</div>
+                    <div class="translate-option" data-lang="tr"><span class="flag">🇹🇷</span> Türkçe</div>
+                </div>
+            </div>
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode">
                 <i class="fas fa-sun" id="themeIcon"></i>
             </button>
@@ -78,6 +141,8 @@
         </div>
     </div>
 </nav>
+
+<main id="main">
 
 <!-- Hero Section -->
 <section class="hero" id="home">
@@ -118,9 +183,9 @@
         <div class="about-grid">
             <div class="about-image-wrapper animate-in">
                 <div class="about-image">
-                    <img src="images/about.jpg" alt="Fierce Fitness Interior">
+                    <img src="images/about.jpg" alt="Fierce Fitness Interior" loading="lazy" width="800" height="450">
                     <div class="about-image-badge">
-                        <span class="badge-number">8+</span>
+                        <span class="badge-number">10+</span>
                         <span class="badge-text" data-i18n="about_badge">Години искуство</span>
                     </div>
                 </div>
@@ -159,7 +224,7 @@
             </div>
             <div class="stat-card animate-in">
                 <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
-                <div class="stat-number" data-target="8">0</div>
+                <div class="stat-number" data-target="10">0</div>
                 <div class="stat-suffix">+</div>
                 <div class="stat-label" data-i18n="stat_years">Години искуство</div>
             </div>
@@ -193,7 +258,7 @@
             <div class="programs-track" id="programsTrack">
                 <div class="program-card animate-in">
                     <div class="program-image">
-                        <img src="images/strength.jpg" alt="Lower body">
+                        <img src="images/strength.jpg" alt="Lower body" loading="lazy" width="400" height="220">
                         <div class="program-overlay">
                             <span class="program-more" data-i18n="program_more">Повеќе →</span>
                         </div>
@@ -205,7 +270,7 @@
                 </div>
                 <div class="program-card animate-in">
                     <div class="program-image">
-                        <img src="images/hiit.jpg" alt="Abs, upper & boxing">
+                        <img src="images/hiit.jpg" alt="Abs, upper & boxing" loading="lazy" width="400" height="220">
                         <div class="program-overlay">
                             <span class="program-more" data-i18n="program_more">Повеќе →</span>
                         </div>
@@ -218,7 +283,7 @@
                 </div>
                 <div class="program-card animate-in">
                     <div class="program-image">
-                        <img src="images/functional.jpg" alt="Total body">
+                        <img src="images/functional.jpg" alt="Total body" loading="lazy" width="400" height="220">
                         <div class="program-overlay">
                             <span class="program-more" data-i18n="program_more">Повеќе →</span>
                         </div>
@@ -231,15 +296,14 @@
                 </div>
                 <div class="program-card animate-in">
                     <div class="program-image">
-                        <img src="images/personal.jpg" alt="Group therapy boxing 45'">
+                        <img src="images/personal.jpg" alt="Group therapy boxing 45'" loading="lazy" width="400" height="220">
                         <div class="program-overlay">
                             <span class="program-more" data-i18n="program_more">Повеќе →</span>
                         </div>
                     </div>
                     <div class="program-info">
                         <h3 data-i18n="program4_title">Group therapy boxing 45'</h3>
-                        <p data-i18n="program4_desc">Индивидуални сесии со нашите најдобри тренери, целосно прилагодени
-                            на твоите цели.</p>
+                        <p data-i18n="program4_desc">45 минути кардио и кондиционен тренинг со удари на вреќа, фокус на правилна техника, координација и експлозивна издржливост.</p>
                     </div>
                 </div>
             </div>
@@ -268,12 +332,10 @@
             <!-- Trainer 1 — larger card -->
             <div class="trainer-card trainer-card--featured animate-in">
                 <div class="trainer-image">
-                    <img src="images/trainer1.jpg" alt="Драгана Андреевска">
+                    <img src="images/trainer1.jpg" alt="Драгана Андреевска" loading="lazy" width="400" height="280">
                     <div class="trainer-socials">
-                        <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"
-                           title="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"
-                           title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" target="_blank" rel="noopener" aria-label="Instagram - Драгана Андреевска"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank" rel="noopener" aria-label="Facebook - Драгана Андреевска"><i class="fab fa-facebook-f"></i></a>
                     </div>
                 </div>
                 <div class="trainer-info">
@@ -285,30 +347,25 @@
             <!-- Trainer 2 -->
             <div class="trainer-card animate-in">
                 <div class="trainer-image">
-                    <img src="images/trainer2.jpg" alt="Мила Петровска">
+                    <img src="images/trainer2.jpg" alt="Мила Петровска" loading="lazy" width="400" height="280">
                     <div class="trainer-socials">
-                        <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"
-                           title="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"
-                           title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" target="_blank" rel="noopener" aria-label="Instagram - Мила Петровска"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank" rel="noopener" aria-label="Facebook - Мила Петровска"><i class="fab fa-facebook-f"></i></a>
                     </div>
                 </div>
                 <div class="trainer-info">
                     <h3>Мила Петровска</h3>
                     <span class="trainer-role" data-i18n="trainer2_role">HIIT & Functional Coach</span>
-                    <p class="trainer-spec" data-i18n="trainer2_spec">Посветена на создавање мотивирачка атмосфера во која секој тренинг носи нов предизвик и напредок.
-                        тренинг</p>
+                    <p class="trainer-spec" data-i18n="trainer2_spec">Посветена на создавање мотивирачка атмосфера во која секој тренинг носи нов предизвик и напредок.</p>
                 </div>
             </div>
             <!-- Trainer 3 -->
             <div class="trainer-card animate-in">
                 <div class="trainer-image">
-                    <img src="images/trainer3.jpg" alt="Андријана Атанасовска">
+                    <img src="images/trainer3.jpg" alt="Андријана Атанасовска" loading="lazy" width="400" height="280">
                     <div class="trainer-socials">
-                        <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"
-                           title="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"
-                           title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" target="_blank" rel="noopener" aria-label="Instagram - Андријана Атанасовска"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank" rel="noopener" aria-label="Facebook - Андријана Атанасовска"><i class="fab fa-facebook-f"></i></a>
                     </div>
                 </div>
                 <div class="trainer-info">
@@ -320,12 +377,10 @@
             <!-- Trainer 4 -->
             <div class="trainer-card animate-in">
                 <div class="trainer-image">
-                    <img src="images/trainer4.jpg" alt="Николина Наумовска">
+                    <img src="images/trainer4.jpg" alt="Николина Наумовска" loading="lazy" width="400" height="280">
                     <div class="trainer-socials">
-                        <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"
-                           title="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"
-                           title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" target="_blank" rel="noopener" aria-label="Instagram - Николина Наумовска"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank" rel="noopener" aria-label="Facebook - Николина Наумовска"><i class="fab fa-facebook-f"></i></a>
                     </div>
                 </div>
                 <div class="trainer-info">
@@ -335,43 +390,35 @@
                 </div>
             </div>
             <!-- Trainer 5 -->
-<div class="trainer-card animate-in">
-    <div class="trainer-image">
-        <img src="images/trainer5.jpg" alt="Стефани Радевска">
-        <div class="trainer-socials">
-            <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"
-               title="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"
-               title="Facebook"><i class="fab fa-facebook-f"></i></a>
-        </div>
-    </div>
-    <div class="trainer-info">
-        <h3>Стефани Радевска</h3>
-        <span class="trainer-role" data-i18n="trainer5_role">Coach</span>
-        <p class="trainer-spec" data-i18n="trainer5_spec">
-           Со посветеност и позитивна енергија, го прави секој тренинг чекор поблиску до целта.
-        </p>
-    </div>
-</div>
+            <div class="trainer-card animate-in">
+                <div class="trainer-image">
+                    <img src="images/trainer5.jpg" alt="Стефани Радевска" loading="lazy" width="400" height="280">
+                    <div class="trainer-socials">
+                        <a href="#" target="_blank" rel="noopener" aria-label="Instagram - Стефани Радевска"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank" rel="noopener" aria-label="Facebook - Стефани Радевска"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                <div class="trainer-info">
+                    <h3>Стефани Радевска</h3>
+                    <span class="trainer-role" data-i18n="trainer5_role">Coach</span>
+                    <p class="trainer-spec" data-i18n="trainer5_spec">Со посветеност и позитивна енергија, го прави секој тренинг чекор поблиску до целта.</p>
+                </div>
+            </div>
             <!-- Trainer 6 -->
-<div class="trainer-card animate-in">
-    <div class="trainer-image">
-        <img src="images/trainer6.jpg" alt="Михаела Василевска">
-        <div class="trainer-socials">
-            <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"
-               title="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"
-               title="Facebook"><i class="fab fa-facebook-f"></i></a>
-        </div>
-    </div>
-    <div class="trainer-info">
-        <h3>Михаела Василевска</h3>
-        <span class="trainer-role" data-i18n="trainer6_role">Coach</span>
-        <p class="trainer-spec" data-i18n="trainer6_spec">
-            Верува во дисциплина, посветеност и мали секојдневни победи што водат до големи резултати.
-        </p>
-    </div>
-</div>
+            <div class="trainer-card animate-in">
+                <div class="trainer-image">
+                    <img src="images/trainer6.jpg" alt="Михаела Василевска" loading="lazy" width="400" height="280">
+                    <div class="trainer-socials">
+                        <a href="#" target="_blank" rel="noopener" aria-label="Instagram - Михаела Василевска"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank" rel="noopener" aria-label="Facebook - Михаела Василевска"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                <div class="trainer-info">
+                    <h3>Михаела Василевска</h3>
+                    <span class="trainer-role" data-i18n="trainer6_role">Coach</span>
+                    <p class="trainer-spec" data-i18n="trainer6_spec">Верува во дисциплина, посветеност и мали секојдневни победи што водат до големи резултати.</p>
+                </div>
+            </div>
 
 
 
@@ -441,8 +488,8 @@
             </div>
             <div class="pricing-card animate-in" data-plan-id-card="3">
                 <span class="active-badge" data-i18n="dash_current">Тековен</span>
-                <!-- Rotated "Limited spots" sticker — imperfect detail -->
-                <div class="pricing-sticker" aria-hidden="true">Limited spots</div>
+                <!-- Rotated "Limited spots" sticker -->
+                <div class="pricing-sticker" data-i18n="pricing_limited_spots" aria-hidden="true">Лимитирани места</div>
                 <div class="pricing-header">
                     <h3 class="pricing-name" data-i18n="pricing_elite_name">Elite</h3>
                     <div class="pricing-price">
@@ -543,82 +590,6 @@
     </div>
 </section>
 
-<!-- Blog Section -->
-<section class="section blog" id="blog">
-    <div class="container">
-        <div class="section-header">
-            <div class="section-tag animate-in" data-i18n="blog_tag">БЛОГ</div>
-            <h2 class="section-title animate-in" data-i18n="blog_title">Најнови <span class="text-accent">статии</span>
-            </h2>
-        </div>
-        <div class="blog-grid" id="blogGrid">
-            <article class="blog-card blog-featured animate-in">
-                <div class="blog-image">
-                    <img src="images/blog-nutrition.jpg" alt="Nutrition Guide">
-                    <div class="blog-overlay">
-                        <span class="blog-read-more" data-i18n="blog_read_more">Прочитај повеќе →</span>
-                    </div>
-                    <span class="blog-category" data-i18n="blog_cat_nutrition">Нутриција</span>
-                </div>
-                <div class="blog-content">
-                    <div class="blog-meta">
-                        <span><i class="fas fa-calendar"></i> 15 Мај, 2026</span>
-                        <span><i class="fas fa-user"></i> Драгана Андреевска</span>
-                    </div>
-                    <h3 data-i18n="blog1_title">Комплетен водич за исхрана при тренирање</h3>
-                    <p data-i18n="blog1_desc">Дознај која е најдобрата исхрана за постигнување на твоите фитнес цели. Од
-                        макронутриенти до тајминг на оброци...</p>
-                </div>
-            </article>
-            <article class="blog-card animate-in">
-                <div class="blog-image">
-                    <img src="images/blog-motivation.jpg" alt="Motivation">
-                    <div class="blog-overlay">
-                        <span class="blog-read-more" data-i18n="blog_read_more">Прочитај повеќе →</span>
-                    </div>
-                    <span class="blog-category" data-i18n="blog_cat_motivation">Мотивација</span>
-                </div>
-                <div class="blog-content">
-                    <div class="blog-meta">
-                        <span><i class="fas fa-calendar"></i> 10 Мај, 2026</span>
-                    </div>
-                    <h4 data-i18n="blog2_title">5 начини да останеш мотивиран</h4>
-                </div>
-            </article>
-            <article class="blog-card animate-in">
-                <div class="blog-image">
-                    <img src="images/blog-health.jpg" alt="Health">
-                    <div class="blog-overlay">
-                        <span class="blog-read-more" data-i18n="blog_read_more">Прочитај повеќе →</span>
-                    </div>
-                    <span class="blog-category" data-i18n="blog_cat_health">Здравје</span>
-                </div>
-                <div class="blog-content">
-                    <div class="blog-meta">
-                        <span><i class="fas fa-calendar"></i> 5 Мај, 2026</span>
-                    </div>
-                    <h4 data-i18n="blog3_title">Значењето на опоравувањето по тренинг</h4>
-                </div>
-            </article>
-            <article class="blog-card animate-in">
-                <div class="blog-image">
-                    <img src="images/blog-training.jpg" alt="Training">
-                    <div class="blog-overlay">
-                        <span class="blog-read-more" data-i18n="blog_read_more">Прочитај повеќе →</span>
-                    </div>
-                    <span class="blog-category" data-i18n="blog_cat_training">Тренинг</span>
-                </div>
-                <div class="blog-content">
-                    <div class="blog-meta">
-                        <span><i class="fas fa-calendar"></i> 1 Мај, 2026</span>
-                    </div>
-                    <h4 data-i18n="blog4_title">HIIT vs. Classic: што е подобро?</h4>
-                </div>
-            </article>
-        </div>
-    </div>
-</section>
-
 <!-- Contact Section -->
 <section class="section contact" id="contact">
     <div class="container">
@@ -669,41 +640,40 @@
                     <div class="contact-info-item">
                         <div class="contact-info-icon"><i class="fas fa-map-marker-alt"></i></div>
                         <div>
-    <h4 data-i18n="contact_info_address">Адреса</h4>
-   <div style="display: flex; gap: 40px;">
-    <div>
-        <strong>Центар</strong>
-        <p>Ул. Македонија бр. 23, Скопје</p>
-        <a href="https://maps.app.goo.gl/iDY273W7kCJaN7ZB7?g_st=ic" target="_blank">Отвори на мапа</a>
-    </div>
-
-    <div>
-        <strong>Тафталиџе</strong>
-        <p>Адреса за Тафталиџе</p>
-        <a href="https://maps.app.goo.gl/9QW5iPqfuNbVPZY96?g_st=ic" target="_blank">Отвори на мапа</a>
-    </div>
-</div>
-</div>
+                            <h4 data-i18n="contact_info_address">Адреса</h4>
+                            <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+                                <div>
+                                    <strong>Центар</strong>
+                                    <p>Ул. Македонија бр. 23, Скопје</p>
+                                    <a href="https://maps.app.goo.gl/iDY273W7kCJaN7ZB7?g_st=ic" target="_blank" rel="noopener">Отвори на мапа</a>
+                                </div>
+                                <div>
+                                    <strong>Тафталиџе</strong>
+                                    <p>Ул. Варшавска бр. 14, Скопје</p>
+                                    <a href="https://maps.app.goo.gl/9QW5iPqfuNbVPZY96?g_st=ic" target="_blank" rel="noopener">Отвори на мапа</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="contact-info-item">
                         <div class="contact-info-icon"><i class="fas fa-phone-alt"></i></div>
                         <div>
                             <h4 data-i18n="contact_info_phone">Телефон</h4>
-                            <p>070 227 929</p>
+                            <p><a href="tel:070227929">070 227 929</a></p>
                         </div>
                     </div>
                     <div class="contact-info-item">
                         <div class="contact-info-icon"><i class="fas fa-envelope"></i></div>
                         <div>
                             <h4 data-i18n="contact_info_email">Email</h4>
-                            <p>info@fiercefitness.mk</p>
+                            <p><a href="mailto:info@fiercefitness.mk">info@fiercefitness.mk</a></p>
                         </div>
                     </div>
                     <div class="contact-info-item">
                         <div class="contact-info-icon"><i class="fas fa-clock"></i></div>
                         <div>
                             <h4 data-i18n="contact_info_hours">Работно време</h4>
-                            <p data-i18n="contact_hours_detail">Понеделник - петок 07.00 - 21.00<br>Саб 09.00 - 15.00</p>
+                            <p data-i18n="contact_hours_detail">Пон - Пет: 06:00 - 23:00<br>Саб - Нед: 08:00 - 22:00</p>
                         </div>
                     </div>
                 </div>
@@ -723,6 +693,7 @@
         </div>
     </div>
 </section>
+</main>
 
 <!-- Footer -->
 <footer class="footer">
@@ -736,14 +707,10 @@
                 <p data-i18n="footer_desc">Најсилниот фитнес центар во Скопје. Изгради ја својата најсилна верзија со
                     нас.</p>
                 <div class="footer-socials">
-                    <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"
-                       title="Demo link"><i class="fab fa-instagram"></i></a>
-                    <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"
-                       title="Demo link"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok" title="Demo link"><i
-                            class="fab fa-tiktok"></i></a>
-                    <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube" title="Demo link"><i
-                            class="fab fa-youtube"></i></a>
+                    <a href="#" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
             <div class="footer-links">
@@ -777,10 +744,10 @@
 </footer>
 
 <!-- Auth Modal -->
-<div class="auth-modal" id="authModal">
+<div class="auth-modal" id="authModal" role="dialog" aria-modal="true" aria-label="Најава / Регистрација">
     <div class="auth-modal-overlay" id="authModalOverlay"></div>
     <div class="auth-modal-content">
-        <button class="auth-modal-close" id="authModalClose">&times;</button>
+        <button class="auth-modal-close" id="authModalClose" aria-label="Затвори">&times;</button>
 
         <!-- Logged Out State -->
         <div class="auth-logged-out" id="authLoggedOut">
@@ -826,6 +793,13 @@
                     <input type="password" id="regPassword" required placeholder=" ">
                     <label>Лозинка</label>
                     <span class="form-line"></span>
+                    <small class="password-hint" data-i18n="reg_password_hint">Најмалку 8 карактери, голема буква, мала буква и број</small>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="regPasswordConfirm" required placeholder=" ">
+                    <label data-i18n="reg_confirm_password">Потврди лозинка</label>
+                    <span class="form-line"></span>
+                    <span class="error-message" data-i18n="reg_password_mismatch">Лозинките не се совпаѓаат</span>
                 </div>
                 <div class="auth-error" id="registerError"></div>
                 <button type="submit" class="btn btn-primary btn-full">Регистрирај се</button>
@@ -901,7 +875,7 @@
     <span data-i18n="sticky_cta">Приклучи се</span>
 </a>
 
-<script src="script.js?v=5"></script>
+<script src="script.js?v=8"></script>
 <div id="google_translate_element"></div>
 <script>
     function googleTranslateElementInit() {
@@ -912,6 +886,6 @@
         }, 'google_translate_element');
     }
 </script>
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>

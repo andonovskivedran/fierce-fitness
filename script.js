@@ -2,7 +2,9 @@
    FIERCE FITNESS - Main JavaScript
    ============================================ */
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8000'
+    : '';
 
 async function api(path, options = {}) {
     const token = localStorage.getItem("token");
@@ -13,6 +15,12 @@ async function api(path, options = {}) {
         res = await fetch(`${API_BASE}${path}`, { ...options, headers });
     } catch (e) {
         throw new Error("Серверот не е достапен. Проверете дали backend е вклучен.");
+    }
+    if (res.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        if (typeof refreshAuthUI === "function") refreshAuthUI();
+        throw new Error("Сесијата истече. Ве молиме најавете се повторно.");
     }
     if (!res.ok) {
         const err = await res.json().catch(() => ({}));
@@ -76,7 +84,7 @@ const translations = {
         nav_programs: "Програми",
         nav_trainers: "Тренери",
         nav_pricing: "Членство",
-        nav_blog: "Блог",
+        nav_faq: "ЧПП",
         nav_contact: "Контакт",
         nav_cta: "Приклучи се",
         // Hero
@@ -89,7 +97,7 @@ const translations = {
         about_tag: "ЗА НАС",
         about_title: 'Нашата <span class="text-accent">приказна</span>',
         about_badge: "Години искуство",
-        about_p1: "Fierce Fitness започна како мала идеја во 2014 година — да создадеме место каде што тренингот ќе биде нешто во кое навистина ќе уживаш.Со текот на годините, идејата прерасна во заедница од жени кои доаѓаат со различни цели, различни приказни и различно ниво на искуство, но со една заедничка желба — да се чувствуваат подобро и посилно.",
+        about_p1: "Fierce Fitness започна како мала идеја во 2014 година — да создадеме место каде што тренингот ќе биде нешто во кое навистина ќе уживаш. Со текот на годините, идејата прерасна во заедница од жени кои доаѓаат со различни цели, различни приказни и различно ниво на искуство, но со една заедничка желба — да се чувствуваат подобро и посилно.",
         about_p2: "Денес, Fierce Fitness е место каде што се комбинираат квалитетен тренинг, професионален пристап и пријатна атмосфера. Без разлика дали си на почеток или веќе долго време тренираш, целта е иста — да имаш простор за себе и тренинг кој ти одговара.",
         about_p3: "Повеќе од 10 години растеме заедно со нашата заедница — и сè уште ни е најважно секој што ќе влезе во Fierce да се чувствува како да е на вистинското место.",
         stat_members: "Активни членови",
@@ -108,7 +116,7 @@ const translations = {
         program3_title: "Total body",
         program3_desc: "Интензивен тренинг кој е комбинација од hiit, кардио и тежински програми. Ја подобрува кондицијата, издржливоста и се фокусира на градење мускулна сила и маса. ",
         program4_title: "Group therapy boxing 45'",
-        program4_desc: "45 минути кардио и кондиционен тренинг. Се состои од удари на вреќа, учење техника, координација, баланс и вежби за издржливост со сопствена тежина. ",
+        program4_desc: "45 минути кардио и кондиционен тренинг со удари на вреќа, фокус на правилна техника, координација и експлозивна издржливост.",
         // Trainers
         trainers_tag: "ТРЕНЕРИ",
         trainers_title: 'Експерти кои те <span class="text-accent">водат</span>',
@@ -131,6 +139,7 @@ const translations = {
         pricing_subtitle: "Флексибилни планови прилагодени на твоите потреби",
         pricing_period: "/месечно",
         pricing_badge: "Најпопуларно",
+        pricing_limited_spots: "Лимитирани места",
         pricing_cta: "Избери план",
         pricing_basic_name: "Basic",
         pricing_basic_f1: "Пристап кон теретана",
@@ -153,19 +162,6 @@ const translations = {
         pricing_elite_f4: "Неограничени PT сесии",
         pricing_elite_f5: "Персонален нутриционист",
         pricing_elite_f6: "Неделна масажа",
-        // Blog
-        blog_tag: "БЛОГ",
-        blog_title: 'Најнови <span class="text-accent">статии</span>',
-        blog_read_more: "Прочитај повеќе →",
-        blog_cat_nutrition: "Нутриција",
-        blog_cat_motivation: "Мотивација",
-        blog_cat_health: "Здравје",
-        blog_cat_training: "Тренинг",
-        blog1_title: "Комплетен водич за исхрана при тренирање",
-        blog1_desc: "Дознај која е најдобрата исхрана за постигнување на твоите фитнес цели. Од макронутриенти до тајминг на оброци...",
-        blog2_title: "5 начини да останеш мотивиран",
-        blog3_title: "Значењето на опоравувањето по тренинг",
-        blog4_title: "HIIT vs. Classic: што е подобро?",
         // Contact
         contact_tag: "КОНТАКТ",
         contact_title: 'Стапи во <span class="text-accent">контакт</span>',
@@ -208,7 +204,11 @@ const translations = {
         // Form
         form_error_name: "Внесете го вашето име",
         form_error_email: "Внесете валидна email адреса",
-        form_error_message: "Внесете порака"
+        form_error_message: "Внесете порака",
+        reg_confirm_password: "Потврди лозинка",
+        reg_password_mismatch: "Лозинките не се совпаѓаат",
+        reg_password_hint: "Најмалку 8 карактери, голема буква, мала буква и број",
+        skip_link: "Прескокни до содржината"
     },
     en: {
         // Nav
@@ -217,7 +217,7 @@ const translations = {
         nav_programs: "Programs",
         nav_trainers: "Trainers",
         nav_pricing: "Membership",
-        nav_blog: "Blog",
+        nav_faq: "FAQ",
         nav_contact: "Contact",
         nav_cta: "Join Now",
         // Hero
@@ -230,9 +230,9 @@ const translations = {
         about_tag: "ABOUT US",
         about_title: 'Our <span class="text-accent">story</span>',
         about_badge: "Years of experience",
-        about_p1: "Fierce Fitness was founded in 2016 with one mission — to create a space where every person, regardless of their fitness level, can reach their maximum potential. We started as a small gym, and today we are one of the largest fitness centers in the country.",
+        about_p1: "Fierce Fitness was founded in 2014 with one mission — to create a space where every person, regardless of their fitness level, can reach their maximum potential. We started as a small gym, and today we are one of the largest fitness centers in the country.",
         about_p2: "Our philosophy is simple: a combination of modern equipment, scientifically-backed training methods, and a personal approach to every member. We believe fitness is not just physical activity — it's a lifestyle.",
-        about_p3: "With over 2,500 active members and a team of 15 certified professionals, we offer a complete fitness experience that goes beyond a regular gym.",
+        about_p3: "With over 10 years of growth alongside our community, what matters most to us is that everyone who walks through the doors of Fierce feels like they're in the right place.",
         stat_members: "Active members",
         stat_years: "Years of experience",
         stat_trainers: "Certified trainers",
@@ -249,25 +249,30 @@ const translations = {
         program3_title: "Total body",
         program3_desc: "Exercises that improve everyday movement, balance, and flexibility.",
         program4_title: "Group therapy boxing 45'",
-        program4_desc: "Individual sessions with our top trainers, fully tailored to your goals.",
+        program4_desc: "45 minutes of group cardio & boxing. Bag work, technique, coordination, balance, and bodyweight endurance.",
         // Trainers
         trainers_tag: "TRAINERS",
         trainers_title: 'Experts who <span class="text-accent">guide you</span>',
         trainers_subtitle: "Our certified professionals are here to lead you to success",
         trainer1_role: "Head Coach",
-        trainer1_spec: "Specialized in Strength & Conditioning",
+        trainer1_spec: "Dedicated to real results and passing on the energy and motivation from training.",
         trainer2_role: "HIIT & Functional Coach",
-        trainer2_spec: "Specialized in cardio and functional training",
+        trainer2_spec: "Focused on creating an inspiring atmosphere where every workout brings progress.",
         trainer3_role: "Coach",
-        trainer3_spec: "Верува дека континуитетот и правилниот пристап се клучот до долгорочен напредок.",
+        trainer3_spec: "Believes consistency and proper form are the key to long-term progress.",
         trainer4_role: "Yoga & Flexibility Coach",
-        trainer4_spec: "Specialized in mobility and relaxation",
+        trainer4_spec: "Specialized in mobility, recovery and mindfulness.",
+        trainer5_role: "Coach",
+        trainer5_spec: "Dedicated with positive energy, making every workout a step closer to your goal.",
+        trainer6_role: "Coach",
+        trainer6_spec: "Believes in discipline, dedication and daily small victories leading to big results.",
         // Pricing
         pricing_tag: "MEMBERSHIP",
         pricing_title: 'Choose your <span class="text-accent">plan</span>',
         pricing_subtitle: "Flexible plans tailored to your needs",
         pricing_period: "/month",
         pricing_badge: "Most Popular",
+        pricing_limited_spots: "Limited spots",
         pricing_cta: "Choose Plan",
         pricing_basic_name: "Basic",
         pricing_basic_f1: "Gym access",
@@ -290,19 +295,6 @@ const translations = {
         pricing_elite_f4: "Unlimited PT sessions",
         pricing_elite_f5: "Personal nutritionist",
         pricing_elite_f6: "Weekly massage",
-        // Blog
-        blog_tag: "BLOG",
-        blog_title: 'Latest <span class="text-accent">articles</span>',
-        blog_read_more: "Read more →",
-        blog_cat_nutrition: "Nutrition",
-        blog_cat_motivation: "Motivation",
-        blog_cat_health: "Health",
-        blog_cat_training: "Training",
-        blog1_title: "Complete nutrition guide for training",
-        blog1_desc: "Discover the best nutrition for achieving your fitness goals. From macronutrients to meal timing...",
-        blog2_title: "5 ways to stay motivated",
-        blog3_title: "The importance of recovery after training",
-        blog4_title: "HIIT vs. Classic: which is better?",
         // Contact
         contact_tag: "CONTACT",
         contact_title: 'Get in <span class="text-accent">touch</span>',
@@ -345,7 +337,11 @@ const translations = {
         // Form
         form_error_name: "Please enter your name",
         form_error_email: "Please enter a valid email address",
-        form_error_message: "Please enter a message"
+        form_error_message: "Please enter a message",
+        reg_confirm_password: "Confirm password",
+        reg_password_mismatch: "Passwords do not match",
+        reg_password_hint: "At least 8 characters, uppercase, lowercase and a digit",
+        skip_link: "Skip to content"
     }
 };
 
@@ -373,11 +369,9 @@ document.addEventListener('DOMContentLoaded', () => {
     safeInit(initContactForm);
     safeInit(initNewsletterForm);
     safeInit(initAuthModal);
-    safeInit(initPricingButtons);
     safeInit(initThemeToggle);
     safeInit(initTranslateDropdown);
     safeInit(initFAQ);
-    safeInit(loadBlogPosts);
     safeInit(loadTrainers);
     applyTranslations(currentLang);
     applyTheme(currentTheme);
@@ -391,13 +385,13 @@ function initLoader() {
         setTimeout(() => {
             loader.classList.add('hidden');
             document.body.style.overflow = '';
-        }, 900);
+        }, 400);
     });
     // Fallback
     setTimeout(() => {
         loader.classList.add('hidden');
         document.body.style.overflow = '';
-    }, 2500);
+    }, 2000);
 }
 
 // --- Custom Cursor ---
@@ -428,7 +422,7 @@ function initCursor() {
     animateFollower();
 
     // Hover effect on interactive elements
-    const hoverTargets = document.querySelectorAll('a, button, .program-card, .trainer-card, .blog-card, .pricing-card');
+    const hoverTargets = document.querySelectorAll('a, button, .program-card, .trainer-card, .pricing-card');
     hoverTargets.forEach(el => {
         el.addEventListener('mouseenter', () => follower.classList.add('hover'));
         el.addEventListener('mouseleave', () => follower.classList.remove('hover'));
@@ -520,7 +514,6 @@ function initLanguage() {
     const label = document.getElementById('langLabel');
     if (!toggle || !label) return;
 
-    // Set initial state
     if (currentLang === 'en') {
         toggle.classList.add('en');
         label.textContent = 'EN';
@@ -659,21 +652,15 @@ function initTranslateDropdown() {
         option.addEventListener('click', () => {
             const lang = option.getAttribute('data-lang');
 
-            // Update active state
             options.forEach(o => o.classList.remove('active'));
             option.classList.add('active');
 
-            // If MK or EN, use our custom translation system
             if (lang === 'mk' || lang === 'en') {
-                // Reset Google Translate if active
                 resetGoogleTranslate();
-                // Switch our custom toggle
                 if (currentLang !== lang) {
                     document.getElementById('langToggle').click();
                 }
             } else {
-                // For other languages, use Google Translate
-                // First reset our custom MK/EN if needed
                 if (currentLang !== 'mk') {
                     currentLang = 'mk';
                     localStorage.setItem('fierce-lang', 'mk');
@@ -705,12 +692,9 @@ function resetGoogleTranslate() {
         select.value = '';
         select.dispatchEvent(new Event('change'));
     }
-    // Remove Google Translate wrapper if present
     const googWrapper = document.querySelector('.goog-te-spinner-pos, .skiptranslate');
     if (googWrapper) googWrapper.style.display = 'none';
 }
-
-// --- Parallax Hero (REMOVED — static image per preference) ---
 
 // --- Counter Animation ---
 function initCounterAnimation() {
@@ -1039,6 +1023,28 @@ function initAuthModal() {
         e.preventDefault();
         const errEl = document.getElementById("registerError");
         errEl.textContent = "";
+        const password = document.getElementById("regPassword").value;
+        const confirm = document.getElementById("regPasswordConfirm").value;
+        if (password !== confirm) {
+            errEl.textContent = translations[currentLang]?.reg_password_mismatch || "Лозинките не се совпаѓаат";
+            return;
+        }
+        if (password.length < 8) {
+            errEl.textContent = currentLang === 'en' ? "Password must be at least 8 characters" : "Лозинката мора да има најмалку 8 карактери";
+            return;
+        }
+        if (!/[A-Z]/.test(password)) {
+            errEl.textContent = currentLang === 'en' ? "Password must contain an uppercase letter" : "Лозинката мора да содржи голема буква (А-Z)";
+            return;
+        }
+        if (!/[a-z]/.test(password)) {
+            errEl.textContent = currentLang === 'en' ? "Password must contain a lowercase letter" : "Лозинката мора да содржи мала буква (a-z)";
+            return;
+        }
+        if (!/[0-9]/.test(password)) {
+            errEl.textContent = currentLang === 'en' ? "Password must contain a digit" : "Лозинката мора да содржи број (0-9)";
+            return;
+        }
         try {
             const data = await api("/auth/register", {
                 method: "POST",
@@ -1232,29 +1238,6 @@ async function handlePricingClick(planId) {
     }
 }
 
-function initPricingButtons() {
-    console.log("[FF] initPricingButtons called, buttons found:", document.querySelectorAll(".btn-pricing").length);
-    document.querySelectorAll(".btn-pricing").forEach(btn => {
-        btn.addEventListener("click", async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (btn.disabled) return;
-            console.log("[FF] pricing clicked, planId:", btn.dataset.planId);
-            const token = localStorage.getItem("token");
-            if (!token) {
-                window._pendingPlanId = btn.dataset.planId;
-                console.log("[FF] no token, opening modal");
-                document.getElementById("authModal").classList.add("show");
-                document.querySelector('[data-tab="login"]').click();
-                return;
-            }
-            const planId = btn.dataset.planId;
-            if (!planId) return;
-            await handlePricingClick(planId);
-        });
-    });
-}
-
 // --- Fallback: delegated click handler (works even if Google Translate modifies DOM) ---
 document.addEventListener("click", function(e) {
     // Pricing buttons
@@ -1298,13 +1281,6 @@ document.addEventListener("click", function(e) {
 }, true);
 
 // --- Dynamic Trainers ---
-const FALLBACK_TRAINERS = [
-    { first_name: "Андреј", last_name: "Димовски", specialty: "Head Coach", bio: "Специјализиран за Strength & Conditioning", image_url: "images/trainer1.jpg", instagram_url: null, facebook_url: null },
-    { first_name: "Марија", last_name: "Јаневска", specialty: "HIIT & Functional Coach", bio: "Специјализирана за кардио и функционален тренинг", image_url: "images/trainer2.jpg", instagram_url: null, facebook_url: null },
-    { first_name: "Никола", last_name: "Стојанов", specialty: "Coach", bio: "Специјализиран за Bodybuilding & Nutrition", image_url: "images/trainer3.jpg", instagram_url: null, facebook_url: null },
-    { first_name: "Ивана", last_name: "Костова", specialty: "Yoga & Flexibility Coach", bio: "Специјализирана за мобилност и релаксација", image_url: "images/trainer4.jpg", instagram_url: null, facebook_url: null },
-];
-
 function renderTrainerCard(trainer, index) {
     const name = escapeHtml(`${trainer.first_name} ${trainer.last_name}`);
     const img = trainer.image_url || `images/trainer${(index % 4) + 1}.jpg`;
@@ -1341,57 +1317,4 @@ async function loadTrainers() {
     if (!trainers || trainers.length === 0) return;
 
     grid.innerHTML = trainers.map((t, i) => renderTrainerCard(t, i)).join("");
-}
-
-// --- Dynamic Blog Posts ---
-const FALLBACK_BLOGS = [
-    { title: "Комплетен водич за исхрана при тренирање", content: "Дознај која е најдобрата исхрана за постигнување на твоите фитнес цели. Од макронутриенти до тајминг на оброци...", category: "Нутриција", created_at: "2026-05-15T00:00:00", author_name: "Андреј Димовски", image: "images/blog-nutrition.jpg" },
-    { title: "5 начини да останеш мотивиран", content: "", category: "Мотивација", created_at: "2026-05-10T00:00:00", author_name: "", image: "images/blog-motivation.jpg" },
-    { title: "Значењето на опоравувањето по тренинг", content: "", category: "Здравје", created_at: "2026-05-05T00:00:00", author_name: "", image: "images/blog-health.jpg" },
-    { title: "HIIT vs. Classic: што е подобро?", content: "", category: "Тренинг", created_at: "2026-05-01T00:00:00", author_name: "", image: "images/blog-training.jpg" },
-];
-
-const BLOG_IMAGES = ["images/blog-nutrition.jpg", "images/blog-motivation.jpg", "images/blog-health.jpg", "images/blog-training.jpg"];
-
-function renderBlogCard(blog, index, isFeatured) {
-    const date = new Date(blog.created_at).toLocaleDateString("mk-MK", { day: "numeric", month: "long", year: "numeric" });
-    const img = blog.image || BLOG_IMAGES[index % BLOG_IMAGES.length];
-    const featuredClass = isFeatured ? " blog-featured" : "";
-    const titleTag = isFeatured ? "h3" : "h4";
-    const meta = blog.author_name
-        ? `<span><i class="fas fa-calendar"></i> ${escapeHtml(date)}</span><span><i class="fas fa-user"></i> ${escapeHtml(blog.author_name)}</span>`
-        : `<span><i class="fas fa-calendar"></i> ${escapeHtml(date)}</span>`;
-    return `
-        <article class="blog-card${featuredClass} animate-in visible">
-            <div class="blog-image">
-                <img src="${escapeHtml(img)}" alt="${escapeHtml(blog.title)}">
-                <div class="blog-overlay">
-                    <span class="blog-read-more" data-i18n="blog_read_more">Прочитај повеќе →</span>
-                </div>
-                <span class="blog-category">${escapeHtml(blog.category)}</span>
-            </div>
-            <div class="blog-content">
-                <div class="blog-meta">${meta}</div>
-                <${titleTag}>${escapeHtml(blog.title)}</${titleTag}>
-                ${blog.content ? `<p>${escapeHtml(blog.content.substring(0, 150))}${blog.content.length > 150 ? "..." : ""}</p>` : ""}
-            </div>
-        </article>
-    `;
-}
-
-async function loadBlogPosts() {
-    const grid = document.getElementById("blogGrid");
-    if (!grid) return;
-
-    let blogs = [];
-    try {
-        blogs = await api("/blog/?limit=10");
-    } catch (e) {
-        console.warn("Failed to load blog posts from API, keeping static content:", e);
-        return;
-    }
-
-    if (!blogs || blogs.length === 0) return;
-
-    grid.innerHTML = blogs.map((b, i) => renderBlogCard(b, i, i === 0)).join("");
 }
