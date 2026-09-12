@@ -166,7 +166,7 @@ const translations = {
         contact_info_phone: "Телефон",
         contact_info_email: "Email",
         contact_info_hours: "Работно време",
-        contact_hours_detail: "Пон - Пет: 06:00 - 23:00<br>Саб - Нед: 08:00 - 22:00",
+        contact_hours_detail: "Пон - Пет: 07:00 - 21:00<br>Саб: 09:00 - 15:00",
         // Dashboard
         dash_no_plan: "Немате активен план",
         dash_browse: "Прелистај планови",
