@@ -112,7 +112,7 @@ const translations = {
         program1_title: "Lower body",
         program1_desc: "Тежински тренинг кој се фокусира на градење на мускулна маса, сила и агилност на долниот дел од телото.",
         program2_title: "Abs, upper & boxing",
-        program2_desc: "45 минути кардио и кондиционен тренинг. Се состои од удари на вреќа, учење техника, координација, баланс и вежби за издржливост со сопствена тежина. ",
+        program2_desc: "Тренинг за сила, мобилност флексибилност и градење на мускулна маса со фокус на горениот дел од телото и јадрото во комбинација со кардио на вреќа. ",
         program3_title: "Total body",
         program3_desc: "Интензивен тренинг кој е комбинација од hiit, кардио и тежински програми. Ја подобрува кондицијата, издржливоста и се фокусира на градење мускулна сила и маса. ",
         program4_title: "Group therapy boxing 45'",
@@ -142,26 +142,17 @@ const translations = {
         pricing_limited_spots: "Лимитирани места",
         pricing_cta: "Избери план",
         pricing_basic_name: "Basic",
-        pricing_basic_f1: "Пристап кон теретана",
-        pricing_basic_f2: "Основни групни часови",
-        pricing_basic_f3: "Сауна",
-        pricing_basic_f4: "Personal Training",
-        pricing_basic_f5: "Нутриционистички план",
-        pricing_basic_f6: "Масажа",
+        pricing_basic_f1: "12 посети месечно",
+        pricing_basic_f2: "Тренинг во група",
+        pricing_basic_f3: "Open gym",
         pricing_premium_name: "Premium",
-        pricing_premium_f1: "Пристап кон теретана",
-        pricing_premium_f2: "Сите групни часови",
-        pricing_premium_f3: "Сауна & парна бања",
-        pricing_premium_f4: "2 Personal Training сесии",
-        pricing_premium_f5: "Нутриционистички план",
-        pricing_premium_f6: "Масажа",
+        pricing_premium_f1: "16 посети месечно",
+        pricing_premium_f2: "Тренинг во група",
+        pricing_premium_f3: "Open gym",
         pricing_elite_name: "Elite",
-        pricing_elite_f1: "Пристап кон теретана",
-        pricing_elite_f2: "Сите групни часови",
-        pricing_elite_f3: "Сауна & парна бања",
-        pricing_elite_f4: "Неограничени PT сесии",
-        pricing_elite_f5: "Персонален нутриционист",
-        pricing_elite_f6: "Неделна масажа",
+        pricing_elite_f1: "20 посети месечно",
+        pricing_elite_f2: "Тренинг во група",
+        pricing_elite_f3: "Open gym",
         // Contact
         contact_tag: "КОНТАКТ",
         contact_title: 'Стапи во <span class="text-accent">контакт</span>',
@@ -366,6 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
     safeInit(initRippleEffect);
     safeInit(initHeroSpotlight);
     safeInit(initProgramsSlider);
+    safeInit(initTrainersSlider);
     safeInit(initContactForm);
     safeInit(initNewsletterForm);
     safeInit(initAuthModal);
@@ -579,7 +571,7 @@ function initScrollAnimations() {
                 const parent = entry.target.parentElement;
                 const siblings = Array.from(parent.children).filter(child => child.classList.contains('animate-in'));
                 const siblingIndex = siblings.indexOf(entry.target);
-                const delay = siblingIndex * 100;
+                const delay = siblingIndex * 40;
 
                 setTimeout(() => {
                     entry.target.classList.add('visible');
@@ -848,6 +840,165 @@ function initProgramsSlider() {
         createDots();
         goToSlide(0);
     });
+}
+function initTrainersSlider() {
+    const track = document.getElementById('trainersTrack');
+    const prevBtn = document.getElementById('trainerPrev');
+    const nextBtn = document.getElementById('trainerNext');
+    const dotsContainer = document.getElementById('trainerDots');
+
+    if (!track || !prevBtn || !nextBtn || !dotsContainer) return;
+
+    let cards = Array.from(track.querySelectorAll('.trainer-card'));
+    let cardsPerView = getCardsPerView();
+    let currentIndex = cardsPerView;
+    let autoSlide;
+
+    function getCardsPerView() {
+        if (window.innerWidth <= 768) return 1;
+        if (window.innerWidth <= 1024) return 2;
+        return 4;
+    }
+
+    function setupClones() {
+        // избриши стари clones
+        track.querySelectorAll('.clone').forEach(el => el.remove());
+
+        cards = Array.from(track.querySelectorAll('.trainer-card:not(.clone)'));
+
+        const firstClones = cards
+            .slice(0, cardsPerView)
+            .map(card => {
+                const clone = card.cloneNode(true);
+                clone.classList.add('clone', 'visible');
+                return clone;
+            });
+
+        const lastClones = cards
+            .slice(-cardsPerView)
+            .map(card => {
+                const clone = card.cloneNode(true);
+                clone.classList.add('clone');
+                return clone;
+            });
+
+        lastClones.reverse().forEach(clone => {
+            track.insertBefore(clone, track.firstChild);
+        });
+
+        firstClones.forEach(clone => {
+            track.appendChild(clone);
+        });
+
+        currentIndex = cardsPerView;
+        jumpToCurrent();
+    }
+
+    function getCardWidth() {
+        const allCards = track.querySelectorAll('.trainer-card');
+        return allCards[0].offsetWidth + 24;
+    }
+
+    function jumpToCurrent() {
+        track.style.transition = 'none';
+        track.style.transform =
+            `translateX(-${currentIndex * getCardWidth()}px)`;
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                track.style.transition =
+                    'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+        });
+    }
+
+    function moveTo(index) {
+        currentIndex = index;
+
+        track.style.transition =
+            'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+
+        track.style.transform =
+            `translateX(-${currentIndex * getCardWidth()}px)`;
+    }
+
+    track.addEventListener('transitionend', () => {
+        const realCount = cards.length;
+
+        if (currentIndex >= realCount + cardsPerView) {
+            currentIndex = cardsPerView;
+            jumpToCurrent();
+        }
+
+        if (currentIndex < cardsPerView) {
+            currentIndex = realCount + cardsPerView - 1;
+            jumpToCurrent();
+        }
+
+        updateDots();
+    });
+
+    function createDots() {
+        dotsContainer.innerHTML = '';
+        const numDots = 3;
+        for (let i = 0; i < numDots; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('slider-dot');
+
+            if (i === 0) dot.classList.add('active');
+
+            dot.addEventListener('click', () => {
+                currentIndex = cardsPerView + i;
+                moveTo(currentIndex);
+                restartAutoSlide();
+            });
+
+            dotsContainer.appendChild(dot);
+        }
+    }
+
+    function updateDots() {
+        const dots = dotsContainer.querySelectorAll('.slider-dot');
+
+        let realIndex =
+            (currentIndex - cardsPerView + cards.length) % cards.length;
+        const activeDot = Math.floor(realIndex / 2) % dots.length;
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === activeDot);
+        });
+    }
+
+    function startAutoSlide() {
+        autoSlide = setInterval(() => {
+            moveTo(currentIndex + 1);
+        }, 4000);
+    }
+
+    function restartAutoSlide() {
+        clearInterval(autoSlide);
+        startAutoSlide();
+    }
+
+    nextBtn.addEventListener('click', () => {
+        moveTo(currentIndex + 1);
+        restartAutoSlide();
+    });
+
+    prevBtn.addEventListener('click', () => {
+        moveTo(currentIndex - 1);
+        restartAutoSlide();
+    });
+
+    window.addEventListener('resize', () => {
+        cardsPerView = getCardsPerView();
+        setupClones();
+        createDots();
+    });
+
+    setupClones();
+    createDots();
+    updateDots();
+    startAutoSlide();
 }
 
 // --- Contact Form Validation ---

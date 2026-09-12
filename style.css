@@ -1229,19 +1229,18 @@ body.lang-switching [data-i18n] {
 }
 
 /* --- Trainers Section --- */
-.trainers-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+.trainers-slider {
+    overflow: hidden;
+}
+
+.trainers-track {
+    display: flex;
     gap: 24px;
-    align-items: stretch;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.trainers-grid .trainer-card:nth-child(5) {
-    grid-column: 2;
-}
-
-.trainers-grid .trainer-card:nth-child(6) {
-    grid-column: 3;
+.trainers-track .trainer-card {
+    min-width: calc(25% - 18px);
 }
 
 .trainer-card {
@@ -1826,8 +1825,8 @@ body.lang-switching [data-i18n] {
 .animate-in {
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .animate-in.visible {
