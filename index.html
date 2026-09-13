@@ -10,11 +10,11 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="Fierce Fitness | Скопје, Северна Македонија">
     <meta property="og:description" content="Најсилниот фитнес центар во Скопје. Тренирај со најдобрите, постигни ги своите цели.">
-    <meta property="og:image" content="images/hero.jpg">
+    <meta property="og:image" content="https://fiercefitness.mk/images/hero.jpg">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Fierce Fitness | Скопје, Северна Македонија">
     <meta name="twitter:description" content="Најсилниот фитнес центар во Скопје. Тренирај со најдобрите, постигни ги своите цели.">
-    <meta name="twitter:image" content="images/hero.jpg">
+    <meta name="twitter:image" content="https://fiercefitness.mk/images/hero.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
@@ -46,17 +46,17 @@
             {
                 "@type": "OpeningHoursSpecification",
                 "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-                "opens": "06:00",
-                "closes": "23:00"
+                "opens": "07:00",
+                "closes": "21:00"
             },
             {
                 "@type": "OpeningHoursSpecification",
-                "dayOfWeek": ["Saturday", "Sunday"],
-                "opens": "08:00",
-                "closes": "22:00"
+                "dayOfWeek": ["Saturday"],
+                "opens": "09:00",
+                "closes": "15:00"
             }
         ],
-        "image": "images/hero.jpg",
+        "image": "https://fiercefitness.mk/images/hero.jpg",
         "priceRange": "$$"
     }
     </script>
@@ -109,6 +109,7 @@
             <li><a href="#trainers" class="nav-link" data-i18n="nav_trainers">Тренери</a></li>
             <li><a href="#pricing" class="nav-link" data-i18n="nav_pricing">Членство</a></li>
             <li><a href="#faq" class="nav-link" data-i18n="nav_faq">ЧПП</a></li>
+            <li><a href="#blog" class="nav-link" data-i18n="nav_blog">Блог</a></li>
             <li><a href="#contact" class="nav-link" data-i18n="nav_contact">Контакт</a></li>
         </ul>
         <div class="nav-actions">
@@ -150,6 +151,7 @@
         <img src="images/hero.jpg" alt="Gym Training" class="hero-img" id="heroImg">
         <div class="hero-overlay"></div>
         <div class="hero-gradient-spotlight" id="heroSpotlight"></div>
+        <div class="hero-gradient-bottom"></div>
     </div>
     <div class="hero-content">
         <div class="hero-badge animate-in">
@@ -164,10 +166,6 @@
         <div class="hero-buttons animate-in">
             <a href="#pricing" class="btn btn-primary magnetic-btn" data-i18n="hero_cta1">Приклучи се</a>
             <a href="#pricing" class="btn btn-outline magnetic-btn" data-i18n="hero_cta2">Види членство</a>
-        </div>
-        <div class="hero-location animate-in">
-            <i class="fas fa-map-marker-alt"></i>
-            <span>Северна Македонија, Скопје</span>
         </div>
     </div>
     <div class="hero-scroll-indicator">
@@ -249,7 +247,7 @@
     <div class="container">
         <div class="section-header">
             <div class="section-tag animate-in" data-i18n="programs_tag">ПРОГРАМИ</div>
-            <h2 class="section-title animate-in" data-i18n="programs_title">Најди <span
+            <h2 class="section-title animate-in" data-i18n="programs_title">Најди го <span
                     class="text-accent">својот</span> стил</h2>
             <p class="section-subtitle animate-in" data-i18n="programs_subtitle">Разновидни програми дизајнирани за
                 секоја цел и ниво</p>
@@ -459,7 +457,7 @@
                 <div class="pricing-header">
                     <h3 class="pricing-name" data-i18n="pricing_premium_name">Premium</h3>
                     <div class="pricing-price">
-                        <span class="price-amount">2700</span>
+                        <span class="price-amount">2000</span>
                         <span class="price-currency">ден</span>
                         <span class="price-period" data-i18n="pricing_period">/месечно</span>
                     </div>
@@ -479,7 +477,7 @@
                 <div class="pricing-header">
                     <h3 class="pricing-name" data-i18n="pricing_elite_name">Elite</h3>
                     <div class="pricing-price">
-                        <span class="price-amount">2600</span>
+                        <span class="price-amount">2500</span>
                         <span class="price-currency">ден</span>
                         <span class="price-period" data-i18n="pricing_period">/месечно</span>
                     </div>
@@ -511,9 +509,9 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="faq-answer">
-                    <p data-i18n="faq_a1">Тренинг во група или open gym 12 посети месечно = 2500 денари 
-                        тренинг во група или open gym 16 посети месечно = 2700 денари  
-                        тренинг во група или open gym 20 посети месечно = 2900 денари 
+                    <p data-i18n="faq_a1">Тренинг во група или open gym 12 посети месечно = 1500 денари 
+                        тренинг во група или open gym 16 посети месечно = 2000 денари  
+                        тренинг во група или open gym 20 посети месечно = 2500 денари 
                             сауна 4 посети = 1500 денари 
                             сауна 8 посети = 2200 денари 
                             сауна 12 посети = 2600 денари</p>
@@ -570,8 +568,25 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="faq-answer">
-                    <p data-i18n="faq_a7">Се наоѓаме на ул. Македонија бр. 23, 1000 Скопје. Работиме понеделник - петок од 06:00 до 23:00, а сабота и недела од 08:00 до 22:00.</p>
+                    <p data-i18n="faq_a7">Се наоѓаме на ул. Македонија бр. 23, 1000 Скопје и ул. Варшавска бр. 14, Скопје. Работиме понеделник - петок од 07:00 до 21:00, а сабота од 09:00 до 15:00.</p>
                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Blog Section -->
+<section class="section blog" id="blog">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag animate-in" data-i18n="blog_tag">БЛОГ</div>
+            <h2 class="section-title animate-in" data-i18n="blog_title">Последни <span class="text-accent">новости</span></h2>
+            <p class="section-subtitle animate-in" data-i18n="blog_subtitle">Совети, новости и информации од светот на фитнесот</p>
+        </div>
+        <div class="blog-grid" id="blogGrid">
+            <div class="blog-loading animate-in">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p data-i18n="blog_loading">Се вчитува...</p>
             </div>
         </div>
     </div>
@@ -628,7 +643,7 @@
                         <div class="contact-info-icon"><i class="fas fa-map-marker-alt"></i></div>
                         <div>
                             <h4 data-i18n="contact_info_address">Адреса</h4>
-                            <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+                            <div class="locations-wrapper">
                                 <div>
                                     <strong>Центар</strong>
                                     <p>Ул. Македонија бр. 23, Скопје</p>
@@ -713,13 +728,15 @@
                     <li><a href="#programs" data-i18n="nav_programs">Програми</a></li>
                     <li><a href="#trainers" data-i18n="nav_trainers">Тренери</a></li>
                     <li><a href="#pricing" data-i18n="nav_pricing">Членство</a></li>
+                    <li><a href="#blog" data-i18n="nav_blog">Блог</a></li>
                 </ul>
             </div>
             <div class="footer-newsletter">
                 <h4 data-i18n="footer_newsletter">Newsletter</h4>
                 <p data-i18n="footer_newsletter_desc">Пријави се за совети за тренирање и ексклузивни понуди.</p>
                 <form class="newsletter-form" id="newsletterForm">
-                    <input type="email" placeholder="Email адреса" required>
+                    <label for="newsletterEmail" class="sr-only">Email адреса</label>
+                    <input type="email" id="newsletterEmail" placeholder="Email адреса" required>
                     <button type="submit" aria-label="Subscribe"><i class="fas fa-arrow-right"></i></button>
                     <span class="newsletter-success" id="newsletterSuccess"><i class="fas fa-check"></i></span>
                 </form>

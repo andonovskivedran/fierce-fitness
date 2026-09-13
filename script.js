@@ -106,7 +106,7 @@ const translations = {
         stat_classes: "Групни часови неделно",
         // Programs
         programs_tag: "ПРОГРАМИ",
-        programs_title: 'Најди <span class="text-accent">својот</span> стил',
+        programs_title: 'Најди го <span class="text-accent">својот</span> стил',
         programs_subtitle: "Разновидни програми дизајнирани за секоја цел и ниво",
         program_more: "Повеќе →",
         program1_title: "Lower body",
@@ -199,7 +199,18 @@ const translations = {
         reg_confirm_password: "Потврди лозинка",
         reg_password_mismatch: "Лозинките не се совпаѓаат",
         reg_password_hint: "Најмалку 8 карактери, голема буква, мала буква и број",
-        skip_link: "Прескокни до содржината"
+        skip_link: "Прескокни до содржината",
+        nav_blog: "Блог",
+        blog_tag: "БЛОГ",
+        blog_title: 'Последни <span class="text-accent">новости</span>',
+        blog_subtitle: "Совети, новости и информации од светот на фитнесот",
+        blog_loading: "Се вчитува...",
+        blog_empty: "Нема објавениブログ постови.",
+        blog_read_more: "Повеќе",
+        form_sending: "Се испраќа...",
+        newsletter_success: "Се попиште за newsletter!",
+        auth_welcome: "Добредојде, {name}!",
+        auth_logout: "Одјавен"
     },
     en: {
         // Nav
@@ -299,7 +310,7 @@ const translations = {
         contact_info_phone: "Phone",
         contact_info_email: "Email",
         contact_info_hours: "Working hours",
-        contact_hours_detail: "Mon - Fri: 06:00 - 23:00<br>Sat - Sun: 08:00 - 22:00",
+        contact_hours_detail: "Mon - Fri: 07:00 - 21:00<br>Sat: 09:00 - 15:00",
         // Dashboard
         dash_no_plan: "You have no active plan",
         dash_browse: "Browse plans",
@@ -332,7 +343,18 @@ const translations = {
         reg_confirm_password: "Confirm password",
         reg_password_mismatch: "Passwords do not match",
         reg_password_hint: "At least 8 characters, uppercase, lowercase and a digit",
-        skip_link: "Skip to content"
+        skip_link: "Skip to content",
+        nav_blog: "Blog",
+        blog_tag: "BLOG",
+        blog_title: 'Latest <span class="text-accent">news</span>',
+        blog_subtitle: "Tips, news and information from the world of fitness",
+        blog_loading: "Loading...",
+        blog_empty: "No blog posts published yet.",
+        blog_read_more: "Read more",
+        form_sending: "Sending...",
+        newsletter_success: "Subscribed to newsletter!",
+        auth_welcome: "Welcome, {name}!",
+        auth_logout: "Logged out"
     }
 };
 
@@ -349,7 +371,6 @@ document.addEventListener('DOMContentLoaded', () => {
     safeInit(initCookieBanner);
     safeInit(initNavbar);
     safeInit(initHamburger);
-    safeInit(initLanguage);
     safeInit(initSmoothScroll);
     safeInit(initScrollAnimations);
     safeInit(initCounterAnimation);
@@ -364,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
     safeInit(initThemeToggle);
     safeInit(initTranslateDropdown);
     safeInit(initFAQ);
-    safeInit(loadTrainers);
+    safeInit(loadBlogs);
     applyTranslations(currentLang);
     applyTheme(currentTheme);
     refreshAuthUI();
@@ -500,40 +521,6 @@ function initHamburger() {
     });
 }
 
-// --- Language Toggle ---
-function initLanguage() {
-    const toggle = document.getElementById('langToggle');
-    const label = document.getElementById('langLabel');
-    if (!toggle || !label) return;
-
-    if (currentLang === 'en') {
-        toggle.classList.add('en');
-        label.textContent = 'EN';
-    }
-
-    toggle.addEventListener('click', () => {
-        document.body.classList.add('lang-switching');
-
-        setTimeout(() => {
-            currentLang = currentLang === 'mk' ? 'en' : 'mk';
-            localStorage.setItem('fierce-lang', currentLang);
-            label.textContent = currentLang.toUpperCase();
-
-            if (currentLang === 'en') {
-                toggle.classList.add('en');
-            } else {
-                toggle.classList.remove('en');
-            }
-
-            applyTranslations(currentLang);
-
-            setTimeout(() => {
-                document.body.classList.remove('lang-switching');
-            }, 100);
-        }, 300);
-    });
-}
-
 function applyTranslations(lang) {
     const elements = document.querySelectorAll('[data-i18n]');
     elements.forEach(el => {
@@ -650,16 +637,14 @@ function initTranslateDropdown() {
             if (lang === 'mk' || lang === 'en') {
                 resetGoogleTranslate();
                 if (currentLang !== lang) {
-                    document.getElementById('langToggle').click();
+                    currentLang = lang;
+                    localStorage.setItem('fierce-lang', lang);
+                    applyTranslations(lang);
                 }
             } else {
                 if (currentLang !== 'mk') {
                     currentLang = 'mk';
                     localStorage.setItem('fierce-lang', 'mk');
-                    const toggle = document.getElementById('langToggle');
-                    const label = document.getElementById('langLabel');
-                    toggle.classList.remove('en');
-                    label.textContent = 'MK';
                     applyTranslations('mk');
                 }
                 triggerGoogleTranslate(lang);
@@ -1011,7 +996,7 @@ function initContactForm() {
         const btn = form.querySelector("button[type=submit]");
         const orig = btn.textContent;
         btn.disabled = true;
-        btn.textContent = "Се испраќа...";
+        btn.textContent = translations[currentLang]?.form_sending || "Се испраќа...";
 
         try {
             await api("/contact/", {
@@ -1057,7 +1042,7 @@ function initNewsletterForm() {
                 method: "POST",
                 body: JSON.stringify({ email: input.value })
             });
-            showToast("Се попиште за newsletter!");
+            showToast(translations[currentLang]?.newsletter_success || "Се попиште за newsletter!");
             input.value = '';
             const successIcon = document.getElementById('newsletterSuccess');
             if (successIcon) {
@@ -1157,7 +1142,7 @@ function initAuthModal() {
             const data = await res.json();
             localStorage.setItem("token", data.access_token);
             localStorage.setItem("user", JSON.stringify(data.user));
-            showToast(`Добредојде, ${data.user.first_name}!`);
+            showToast((translations[currentLang]?.auth_welcome || "Добредојде, {name}!").replace("{name}", data.user.first_name));
             closeModal();
             refreshAuthUI();
             if (window._pendingPlanId) {
@@ -1208,7 +1193,7 @@ function initAuthModal() {
             });
             localStorage.setItem("token", data.access_token);
             localStorage.setItem("user", JSON.stringify(data.user));
-            showToast(`Добредојде, ${data.user.first_name}!`);
+            showToast((translations[currentLang]?.auth_welcome || "Добредојде, {name}!").replace("{name}", data.user.first_name));
             closeModal();
             refreshAuthUI();
             if (window._pendingPlanId) {
@@ -1224,7 +1209,7 @@ function initAuthModal() {
     logoutBtn.addEventListener("click", () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        showToast("Одјавен");
+        showToast(translations[currentLang]?.auth_logout || "Одјавен");
         refreshAuthUI();
         closeModal();
     });
@@ -1431,41 +1416,104 @@ document.addEventListener("click", function(e) {
     }
 }, true);
 
-// --- Dynamic Trainers ---
-function renderTrainerCard(trainer, index) {
-    const name = escapeHtml(`${trainer.first_name} ${trainer.last_name}`);
-    const img = trainer.image_url || `images/trainer${(index % 4) + 1}.jpg`;
-    const instagram = trainer.instagram_url ? `<a href="${escapeHtml(trainer.instagram_url)}" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>` : "";
-    const facebook = trainer.facebook_url ? `<a href="${escapeHtml(trainer.facebook_url)}" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>` : "";
-    const featured = index === 0 ? " trainer-card--featured" : "";
+// --- Blog ---
+const blogFallbackImages = [
+    'images/blog-training.jpg',
+    'images/blog-health.jpg',
+    'images/blog-nutrition.jpg',
+    'images/blog-motivation.jpg'
+];
+
+const staticBlogPosts = [
+    {
+        id: 1,
+        title: "5 совети за ефикасен тренинг",
+        content: "Секој тренинг започнува со правилна подготовка. Загревањето е клучно за да го подготвите телото за интензивни вежби и да спречите повреди. Почнете со 5-10 минути кардио, а потоа фокусирајте се на динамички истегнувања. Вклучете го целото тело за максимален ефект. Поставете си реални цели и следете го напредокот. Конзистентноста е поважна од интензитетот — подобро е да тренирате 3-4 пати неделно умерено отколку секој ден премногу.",
+        category: "Тренинг",
+        created_at: "2026-09-10T10:00:00",
+        author_name: "Драгана Андреевска"
+    },
+    {
+        id: 2,
+        title: "Правилна исхрана за градење мускули",
+        content: "Исхраната игра 70% од улогата во постигнувањето на твоите фитнес цели. Протеинот е градбен блок на мускулите — консумирајте 1.6-2.2г протеин по килограм телесна тежина. Јаглехидратите се гориво за тренингот, а здравите масти помагаат за хормонална рамнотежа. Хидратацијата е клучна — пијте најмалку 2-3 литри вода дневно. Планирајте ги оброците околу тренингот за оптимални резултати.",
+        category: "Исхрана",
+        created_at: "2026-09-07T14:30:00",
+        author_name: "Мила Петровска"
+    },
+    {
+        id: 3,
+        title: "Зошто одморот е толку важен",
+        content: "Мускулите не растат за време на тренингот, туку за време на одморот. Кога тренирате интензивно, телото има потреба од 48-72 часа за целосно опоравување. Недоволниот одмор води до прекумерна тренираност, замор и зголемен ризик од повреди. Спиењето е најважниот фактор за опоравување —目标 е 7-9 часа ноќно спиење. Вклучете денови за активно опоравување како лесно пешачење, јога или истегнување.",
+        category: "Опоравување",
+        created_at: "2026-09-03T09:15:00",
+        author_name: "Андријана Атанасовска"
+    },
+    {
+        id: 4,
+        title: "Како да останеш мотивиран зимава",
+        content: "Зимските месеци се предизвик за одржување на рутината. Клучот е да најдеш активност која ти причинува задоволство. Постави си мали, остварли цели наместо големи. Тренирај со пријател за взаемна мотивација. Следи го напредокот — запишувај ги тренинзите и слави ги малите победи. Сети се зошто започна и концентрирај се на тоа како се чувствуваш по тренингот, а не само на изгледот.",
+        category: "Мотивација",
+        created_at: "2026-08-28T16:00:00",
+        author_name: "Николина Наумовска"
+    },
+    {
+        id: 5,
+        title: "HIIT тренинг: максимален ефект за кратко време",
+        content: "High-Intensity Interval Training (HIIT) е еден од најефикасните начини за согорување калории и подобрување на кондицијата. Принципот е едноставен — кратки интервали на интензивно вежбање проследени со кратки одмори. Еден тренинг трае 20-30 минути, а ефектот е подолг од класичниот кардио тренинг. HIIT го забрзува метаболизмот и до 24 часа по тренингот. Идеален е за оние кои немаат многу време, а сакаат максимални резултати.",
+        category: "Тренинг",
+        created_at: "2026-08-22T11:00:00",
+        author_name: "Стефани Радевска"
+    },
+    {
+        id: 6,
+        title: "Важноста на истегнувањето пред и по тренинг",
+        content: "Многу луѓе го занемаруваат истегнувањето, но тоа е клучен дел од секој тренинг. Пред тренинг, фокусирајте се на динамично истегнување кое ги активира мускулите и го зголемува обемот на движење. По тренинг, статичкото истегнување помага за опоравување и намалување на болката во мускулите. Редовното истегнување го подобрува флексибилноста, ја намалува веројатноста од повреди и помага за подобра постава на телото. Посветете барем 10 минути на истегнување по секој тренинг.",
+        category: "Опоравување",
+        created_at: "2026-08-18T13:45:00",
+        author_name: "Михаела Василевска"
+    }
+];
+
+function renderBlogCard(post, index) {
+    const image = blogFallbackImages[index % blogFallbackImages.length];
+    const date = new Date(post.created_at).toLocaleDateString('mk-MK', {
+        year: 'numeric', month: 'long', day: 'numeric'
+    });
+    const excerpt = post.content.length > 150
+        ? post.content.substring(0, 150) + '...'
+        : post.content;
     return `
-        <div class="trainer-card${featured} animate-in visible">
-            <div class="trainer-image">
-                <img src="${escapeHtml(img)}" alt="${name}">
-                <div class="trainer-socials">${instagram}${facebook}</div>
+        <div class="blog-card animate-in">
+            <div class="blog-card-image">
+                <img src="${escapeHtml(image)}" alt="${escapeHtml(post.title)}" loading="lazy" width="400" height="200">
+                <span class="blog-card-category">${escapeHtml(post.category)}</span>
             </div>
-            <div class="trainer-info">
-                <h3>${name}</h3>
-                <span class="trainer-role">${escapeHtml(trainer.specialty)}</span>
-                <p class="trainer-spec">${escapeHtml(trainer.bio)}</p>
+            <div class="blog-card-body">
+                <div class="blog-card-date"><i class="fas fa-calendar-alt"></i> ${date}</div>
+                <h3 class="blog-card-title">${escapeHtml(post.title)}</h3>
+                <p class="blog-card-excerpt">${escapeHtml(excerpt)}</p>
+                ${post.author_name ? `<div class="blog-card-author"><i class="fas fa-user"></i> ${escapeHtml(post.author_name)}</div>` : ''}
             </div>
         </div>
     `;
 }
 
-async function loadTrainers() {
-    const grid = document.getElementById("trainersGrid");
+async function loadBlogs() {
+    const grid = document.getElementById('blogGrid');
     if (!grid) return;
 
-    let trainers = [];
+    let blogs = [];
     try {
-        trainers = await api("/trainers/?limit=20");
+        blogs = await api('/blog/?limit=6');
     } catch (e) {
-        console.warn("Failed to load trainers from API, keeping static content:", e);
-        return;
+        console.warn('Failed to load blogs:', e);
     }
 
-    if (!trainers || trainers.length === 0) return;
+    if (!blogs || blogs.length === 0) {
+        blogs = staticBlogPosts;
+    }
 
-    grid.innerHTML = trainers.map((t, i) => renderTrainerCard(t, i)).join("");
+    grid.innerHTML = blogs.map((post, i) => renderBlogCard(post, i)).join('');
+    initScrollAnimations();
 }
