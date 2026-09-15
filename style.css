@@ -1147,34 +1147,6 @@ body.light-mode .hero-gradient-bottom {
     transform: scale(1.08);
 }
 
-.program-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, var(--overlay-gradient-program) 0%, transparent 60%);
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding-bottom: 20px;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-.program-card:hover .program-overlay {
-    opacity: 1;
-}
-
-.program-more {
-    color: var(--accent);
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition-smooth);
-}
-
-.program-more:hover {
-    letter-spacing: 1px;
-}
-
 .program-info {
     padding: 24px;
 }
