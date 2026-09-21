@@ -198,7 +198,7 @@ const translations = {
         form_error_message: "Внесете порака",
         reg_confirm_password: "Потврди лозинка",
         reg_password_mismatch: "Лозинките не се совпаѓаат",
-        reg_password_hint: "Најмалку 8 карактери, голема буква, мала буква и број",
+        reg_password_hint: "Најмалку 8 карактери, голема буква, мала буква, број и специјален карактер",
         skip_link: "Прескокни до содржината",
         nav_blog: "Блог",
         blog_tag: "БЛОГ",
@@ -342,7 +342,7 @@ const translations = {
         form_error_message: "Please enter a message",
         reg_confirm_password: "Confirm password",
         reg_password_mismatch: "Passwords do not match",
-        reg_password_hint: "At least 8 characters, uppercase, lowercase and a digit",
+        reg_password_hint: "At least 8 characters, uppercase, lowercase, a digit and a special character",
         skip_link: "Skip to content",
         nav_blog: "Blog",
         blog_tag: "BLOG",
@@ -1179,6 +1179,10 @@ function initAuthModal() {
         }
         if (!/[0-9]/.test(password)) {
             errEl.textContent = currentLang === 'en' ? "Password must contain a digit" : "Лозинката мора да содржи број (0-9)";
+            return;
+        }
+        if (!/[^A-Za-z0-9]/.test(password)) {
+            errEl.textContent = currentLang === 'en' ? "Password must contain a special character" : "Лозинката мора да содржи специјален карактер";
             return;
         }
         try {
