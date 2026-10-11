@@ -1,0 +1,11 @@
+services:
+  db:
+    restart: unless-stopped
+  backend:
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+  frontend:
+    ports:
+      - "8080:80"
+    restart: unless-stopped

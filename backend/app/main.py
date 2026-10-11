@@ -12,7 +12,8 @@ app = FastAPI(
     description="Backend API for the Fierce Fitness app",
     version="1.0.0",
     docs_url="/docs",
-    openapi_url="/openapi.json"
+    openapi_url="/openapi.json",
+    root_path=os.getenv("ROOT_PATH", ""),
 )
 
 ALLOWED_ORIGINS = os.getenv(
@@ -37,7 +38,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         response: Response = await call_next(request)
 
-        if request.url.path in ["/docs", "/redoc", "/openapi.json"]:
+        if request.url.path.endswith(("/docs", "/redoc", "/openapi.json")):
             return response
 
         response.headers["X-Content-Type-Options"] = "nosniff"
@@ -63,6 +64,9 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 
 class HTTPSRedirectMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
+        if request.url.path.rstrip("/") == "":
+            return await call_next(request)
+
         if os.getenv("ENVIRONMENT") == "production":
             proto = request.headers.get("x-forwarded-proto", request.url.scheme)
             if proto != "https":

@@ -2,9 +2,10 @@
    FIERCE FITNESS - Main JavaScript
    ============================================ */
 
-const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:8000'
-    : '';
+const IS_LOCAL_HOST = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+const SERVED_BY_NGINX = ['', '80', '8080'].includes(window.location.port);
+const IS_STANDALONE = window.location.protocol === 'file:' || (IS_LOCAL_HOST && !SERVED_BY_NGINX);
+const API_BASE = IS_STANDALONE ? 'http://localhost:8000' : '/api';
 
 async function api(path, options = {}) {
     const token = localStorage.getItem("token");
@@ -205,10 +206,10 @@ const translations = {
         blog_title: 'Последни <span class="text-accent">новости</span>',
         blog_subtitle: "Совети, новости и информации од светот на фитнесот",
         blog_loading: "Се вчитува...",
-        blog_empty: "Нема објавениブログ постови.",
+        blog_empty: "Нема објавени постови.",
         blog_read_more: "Повеќе",
         form_sending: "Се испраќа...",
-        newsletter_success: "Се попиште за newsletter!",
+        newsletter_success: "Успешно се пријавивте за newsletter!",
         auth_welcome: "Добредојде, {name}!",
         auth_logout: "Одјавен"
     },
@@ -1042,7 +1043,7 @@ function initNewsletterForm() {
                 method: "POST",
                 body: JSON.stringify({ email: input.value })
             });
-            showToast(translations[currentLang]?.newsletter_success || "Се попиште за newsletter!");
+            showToast(translations[currentLang]?.newsletter_success || "Успешно се пријавивте за newsletter!");
             input.value = '';
             const successIcon = document.getElementById('newsletterSuccess');
             if (successIcon) {
@@ -1448,7 +1449,7 @@ const staticBlogPosts = [
     {
         id: 3,
         title: "Зошто одморот е толку важен",
-        content: "Мускулите не растат за време на тренингот, туку за време на одморот. Кога тренирате интензивно, телото има потреба од 48-72 часа за целосно опоравување. Недоволниот одмор води до прекумерна тренираност, замор и зголемен ризик од повреди. Спиењето е најважниот фактор за опоравување —目标 е 7-9 часа ноќно спиење. Вклучете денови за активно опоравување како лесно пешачење, јога или истегнување.",
+        content: "Мускулите не растат за време на тренингот, туку за време на одморот. Кога тренирате интензивно, телото има потреба од 48-72 часа за целосно опоравување. Недоволниот одмор води до прекумерна тренираност, замор и зголемен ризик од повреди. Спиењето е најважниот фактор за опоравување — целта е 7-9 часа ноќно спиење. Вклучете денови за активно опоравување како лесно пешачење, јога или истегнување.",
         category: "Опоравување",
         created_at: "2026-09-03T09:15:00",
         author_name: "Андријана Атанасовска"
@@ -1456,7 +1457,7 @@ const staticBlogPosts = [
     {
         id: 4,
         title: "Како да останеш мотивиран зимава",
-        content: "Зимските месеци се предизвик за одржување на рутината. Клучот е да најдеш активност која ти причинува задоволство. Постави си мали, остварли цели наместо големи. Тренирај со пријател за взаемна мотивација. Следи го напредокот — запишувај ги тренинзите и слави ги малите победи. Сети се зошто започна и концентрирај се на тоа како се чувствуваш по тренингот, а не само на изгледот.",
+        content: "Зимските месеци се предизвик за одржување на рутината. Клучот е да најдеш активност која ти причинува задоволство. Постави си мали, остварливи цели наместо големи. Тренирај со пријател за взаемна мотивација. Следи го напредокот — запишувај ги тренинзите и слави ги малите победи. Сети се зошто започна и концентрирај се на тоа како се чувствуваш по тренингот, а не само на изгледот.",
         category: "Мотивација",
         created_at: "2026-08-28T16:00:00",
         author_name: "Николина Наумовска"

@@ -33,3 +33,4 @@ docker-compose.override.yml
 *.pfx
 *.jks
 
+.stack-data/

@@ -1,0 +1,8 @@
+version: 1
+ingress:
+  - name: app
+    service: frontend
+    port: 80
+    primary: true
+    access:
+      type: public
