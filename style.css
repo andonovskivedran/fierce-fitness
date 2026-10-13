@@ -1912,6 +1912,10 @@ body.light-mode .hero-gradient-bottom {
         min-width: calc(50% - 12px);
     }
 
+    .trainers-track .trainer-card {
+        min-width: calc(50% - 12px);
+    }
+
     .pricing-grid {
         grid-template-columns: 1fr;
         max-width: 420px;
@@ -1944,6 +1948,31 @@ body.light-mode .hero-gradient-bottom {
 
     .program-card {
         min-width: calc(100% - 0px);
+    }
+
+    .trainers-track .trainer-card {
+        min-width: 100%;
+    }
+
+    .trainer-image {
+        height: 340px;
+    }
+
+    .trainer-info {
+        padding: 24px 20px;
+    }
+
+    .trainer-info h3 {
+        font-size: 24px;
+    }
+
+    .trainer-role {
+        font-size: 14px;
+    }
+
+    .trainer-spec {
+        font-size: 15px;
+        line-height: 1.7;
     }
 
     .contact-grid {

@@ -91,7 +91,7 @@ const translations = {
         // Hero
         hero_badge: "Најсилниот фитнес центар во Скопје",
         hero_title: 'ИЗГРАДИ ЈА СВОЈАТА<br><span class="text-accent">НАЈСИЛНА</span> ВЕРЗИЈА',
-        hero_desc: "Fierce Fitness е повеќе од теретана — е место каде што се креираат шампиони. Со модерна опрема, сертифицирани тренери и атмосфера која те тера да дадеш се од себе, секој тренинг е чекор кон твојата најдобра верзија.",
+        hero_desc: "Fierce Fitness е повеќе од теретана — тоа е место каде што се креираат шампиони. Со модерна опрема, сертифицирани тренери и атмосфера која те тера да дадеш се од себе, секој тренинг е чекор кон твојата најдобра верзија.",
         hero_cta1: "Приклучи се",
         hero_cta2: "Види членство",
         // About
@@ -767,6 +767,36 @@ function initHeroSpotlight() {
     });
 }
 
+// --- Swipe Support ---
+function addSwipeSupport(element, onSwipeLeft, onSwipeRight) {
+    let startX = 0;
+    let startY = 0;
+    let isDragging = false;
+
+    element.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        isDragging = true;
+    }, { passive: true });
+
+    element.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        const endX = e.changedTouches[0].clientX;
+        const endY = e.changedTouches[0].clientY;
+        const diffX = startX - endX;
+        const diffY = startY - endY;
+
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+            if (diffX > 0) {
+                onSwipeLeft();
+            } else {
+                onSwipeRight();
+            }
+        }
+    }, { passive: true });
+}
+
 // --- Programs Slider ---
 function initProgramsSlider() {
     const track = document.getElementById('programsTrack');
@@ -818,6 +848,8 @@ function initProgramsSlider() {
 
     prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
     nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
+
+    addSwipeSupport(track, () => goToSlide(currentIndex - 1), () => goToSlide(currentIndex + 1));
 
     createDots();
 
@@ -971,6 +1003,14 @@ function initTrainersSlider() {
     });
 
     prevBtn.addEventListener('click', () => {
+        moveTo(currentIndex - 1);
+        restartAutoSlide();
+    });
+
+    addSwipeSupport(track, () => {
+        moveTo(currentIndex + 1);
+        restartAutoSlide();
+    }, () => {
         moveTo(currentIndex - 1);
         restartAutoSlide();
     });
