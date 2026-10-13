@@ -860,6 +860,25 @@
     </div>
 </div>
 
+<!-- Blog Modal -->
+<div class="blog-modal" id="blogModal" role="dialog" aria-modal="true" aria-labelledby="blogModalTitle">
+    <div class="blog-modal-overlay" id="blogModalOverlay"></div>
+    <div class="blog-modal-content">
+        <button class="blog-modal-close" id="blogModalClose" aria-label="Затвори">&times;</button>
+        <div class="blog-modal-image">
+            <img id="blogModalImg" src="" alt="" loading="lazy" width="720" height="300">
+            <span class="blog-card-category" id="blogModalCategory"></span>
+        </div>
+        <div class="blog-modal-body">
+            <div class="blog-card-date"><i class="fas fa-calendar-alt"></i> <span id="blogModalDate"></span></div>
+            <h3 class="blog-modal-title" id="blogModalTitle"></h3>
+            <div class="blog-modal-author" id="blogModalAuthorWrap"><i class="fas fa-user"></i> <span
+                    id="blogModalAuthor"></span></div>
+            <div class="blog-modal-text" id="blogModalText"></div>
+        </div>
+    </div>
+</div>
+
 <!-- Toast Notification -->
 <div class="toast" id="toast">
     <i class="fas fa-check-circle"></i>
@@ -872,7 +891,7 @@
     <span data-i18n="sticky_cta">Приклучи се</span>
 </a>
 
-<script src="script.js?v=8"></script>
+<script src="script.js?v=9"></script>
 <div id="google_translate_element"></div>
 <script>
     function googleTranslateElementInit() {

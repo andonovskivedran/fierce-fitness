@@ -387,6 +387,7 @@ document.addEventListener('DOMContentLoaded', () => {
     safeInit(initTranslateDropdown);
     safeInit(initFAQ);
     safeInit(loadBlogs);
+    safeInit(initBlogModal);
     applyTranslations(currentLang);
     applyTheme(currentTheme);
     refreshAuthUI();
@@ -1528,8 +1529,10 @@ function renderBlogCard(post, index) {
     const excerpt = post.content.length > 150
         ? post.content.substring(0, 150) + '...'
         : post.content;
+    const readMoreLabel = translations[currentLang]?.blog_read_more || "Повеќе";
     return `
-        <div class="blog-card animate-in">
+        <div class="blog-card animate-in" data-blog-index="${index}" role="button" tabindex="0"
+             aria-label="${escapeHtml(post.title)}">
             <div class="blog-card-image">
                 <img src="${escapeHtml(image)}" alt="${escapeHtml(post.title)}" loading="lazy" width="400" height="200">
                 <span class="blog-card-category">${escapeHtml(post.category)}</span>
@@ -1539,10 +1542,15 @@ function renderBlogCard(post, index) {
                 <h3 class="blog-card-title">${escapeHtml(post.title)}</h3>
                 <p class="blog-card-excerpt">${escapeHtml(excerpt)}</p>
                 ${post.author_name ? `<div class="blog-card-author"><i class="fas fa-user"></i> ${escapeHtml(post.author_name)}</div>` : ''}
+                <span class="blog-card-more"><span data-i18n="blog_read_more">${readMoreLabel}</span><i
+                        class="fas fa-arrow-right"></i></span>
             </div>
         </div>
     `;
 }
+
+// Posts currently rendered in the grid (used by the blog modal)
+let renderedBlogPosts = [];
 
 async function loadBlogs() {
     const grid = document.getElementById('blogGrid');
@@ -1559,6 +1567,110 @@ async function loadBlogs() {
         blogs = staticBlogPosts;
     }
 
+    renderedBlogPosts = blogs;
     grid.innerHTML = blogs.map((post, i) => renderBlogCard(post, i)).join('');
     initScrollAnimations();
+}
+
+// --- Blog Modal (full post view) ---
+let blogModalPrevFocus = null;
+
+function openBlogModal(index) {
+    const modal = document.getElementById('blogModal');
+    const post = renderedBlogPosts[index];
+    if (!modal || !post) return;
+
+    const img = document.getElementById('blogModalImg');
+    const category = document.getElementById('blogModalCategory');
+    const dateEl = document.getElementById('blogModalDate');
+    const titleEl = document.getElementById('blogModalTitle');
+    const authorWrap = document.getElementById('blogModalAuthorWrap');
+    const authorEl = document.getElementById('blogModalAuthor');
+    const textEl = document.getElementById('blogModalText');
+
+    img.src = blogFallbackImages[index % blogFallbackImages.length];
+    img.alt = post.title || '';
+    category.textContent = post.category || '';
+    category.style.display = post.category ? '' : 'none';
+    dateEl.textContent = new Date(post.created_at).toLocaleDateString('mk-MK', {
+        year: 'numeric', month: 'long', day: 'numeric'
+    });
+    titleEl.textContent = post.title || '';
+
+    if (post.author_name) {
+        authorWrap.style.display = '';
+        authorEl.textContent = post.author_name;
+    } else {
+        authorWrap.style.display = 'none';
+    }
+
+    // Render full content as paragraphs (textContent keeps it XSS-safe)
+    textEl.innerHTML = '';
+    const paragraphs = String(post.content || '')
+        .split(/\n{2,}|\n/)
+        .map(p => p.trim())
+        .filter(Boolean);
+    paragraphs.forEach(pText => {
+        const p = document.createElement('p');
+        p.textContent = pText;
+        textEl.appendChild(p);
+    });
+
+    blogModalPrevFocus = document.activeElement;
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+
+    const content = modal.querySelector('.blog-modal-content');
+    if (content) content.scrollTop = 0;
+    const closeBtn = document.getElementById('blogModalClose');
+    if (closeBtn) closeBtn.focus({ preventScroll: true });
+}
+
+function closeBlogModal() {
+    const modal = document.getElementById('blogModal');
+    if (!modal) return;
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+    if (blogModalPrevFocus && typeof blogModalPrevFocus.focus === 'function') {
+        blogModalPrevFocus.focus({ preventScroll: true });
+    }
+    blogModalPrevFocus = null;
+}
+
+function initBlogModal() {
+    const modal = document.getElementById('blogModal');
+    if (!modal) return;
+
+    const overlay = document.getElementById('blogModalOverlay');
+    const closeBtn = document.getElementById('blogModalClose');
+    const grid = document.getElementById('blogGrid');
+
+    if (overlay) overlay.addEventListener('click', closeBlogModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeBlogModal);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('show')) {
+            closeBlogModal();
+        }
+    });
+
+    // Works even when Google Translate wraps the grid content
+    document.addEventListener('click', (e) => {
+        if (!modal.classList.contains('show')) {
+            const trigger = e.target.closest('.blog-card-more, .blog-card[data-blog-index]');
+            if (trigger && grid && grid.contains(trigger.closest('.blog-card'))) {
+                e.preventDefault();
+                openBlogModal(Number(trigger.closest('.blog-card').dataset.blogIndex));
+            }
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        const card = e.target.closest?.('.blog-card[data-blog-index]');
+        if (!card) return;
+        if (modal.classList.contains('show')) return;
+        e.preventDefault();
+        openBlogModal(Number(card.dataset.blogIndex));
+    });
 }
