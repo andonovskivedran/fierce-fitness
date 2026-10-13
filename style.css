@@ -429,14 +429,30 @@ textarea:focus-visible {
     right: 0;
     z-index: 1000;
     padding: 16px 0;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Blur/bg на посебен слој — backdrop-filter на .navbar би создал containing
+   block за fixed .nav-menu и менито би се појавило само во висина на navbar-от */
+.navbar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--nav-scrolled-bg);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: -1;
 }
 
 .navbar.scrolled {
-    background: var(--nav-scrolled-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     padding: 10px 0;
+}
+
+.navbar.scrolled::before {
+    opacity: 1;
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
 }
 
@@ -1853,29 +1869,61 @@ body.light-mode .hero-gradient-bottom {
 /* --- Responsive Design --- */
 @media (max-width: 1024px) {
     .nav-menu {
-        display: none;
+        display: flex;
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
         background: var(--mobile-menu-bg);
+        -webkit-backdrop-filter: blur(20px);
         backdrop-filter: blur(20px);
         flex-direction: column;
         justify-content: center;
         align-items: center;
         gap: 24px;
         z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .nav-menu.active {
-        display: flex;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
     }
 
     .nav-menu .nav-link {
         font-size: 24px;
         font-family: var(--font-heading);
         letter-spacing: 3px;
+    }
+
+    .nav-menu.active .nav-link {
+        animation: menuItemIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+    }
+
+    .nav-menu.active .nav-link:nth-child(1) { animation-delay: 0.05s; }
+    .nav-menu.active .nav-link:nth-child(2) { animation-delay: 0.09s; }
+    .nav-menu.active .nav-link:nth-child(3) { animation-delay: 0.13s; }
+    .nav-menu.active .nav-link:nth-child(4) { animation-delay: 0.17s; }
+    .nav-menu.active .nav-link:nth-child(5) { animation-delay: 0.21s; }
+    .nav-menu.active .nav-link:nth-child(6) { animation-delay: 0.25s; }
+    .nav-menu.active .nav-link:nth-child(7) { animation-delay: 0.29s; }
+    .nav-menu.active .nav-link:nth-child(8) { animation-delay: 0.33s; }
+
+    @keyframes menuItemIn {
+        from {
+            opacity: 0;
+            transform: translateY(16px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .hamburger {

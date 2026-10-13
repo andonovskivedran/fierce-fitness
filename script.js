@@ -476,29 +476,47 @@ function initNavbar() {
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-link');
 
-    window.addEventListener('scroll', () => {
-        // Background change
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
+    let sectionTops = [];
+    let ticking = false;
+
+    function cacheSectionTops() {
+        sectionTops = Array.from(sections).map(section => ({
+            id: section.id,
+            top: section.offsetTop
+        }));
+    }
+
+    function updateNavbar() {
+        ticking = false;
+        const scrollY = window.scrollY;
+
+        navbar.classList.toggle('scrolled', scrollY > 50);
+
+        let current = '';
+        for (const section of sectionTops) {
+            if (scrollY >= section.top - 100) {
+                current = section.id;
+            }
         }
 
-        // Active link
-        let current = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop - 100;
-            if (window.scrollY >= sectionTop) {
-                current = section.getAttribute('id');
-            }
-        });
-
         navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === '#' + current) {
-                link.classList.add('active');
-            }
+            link.classList.toggle('active', link.getAttribute('href') === '#' + current);
         });
+    }
+
+    function onScroll() {
+        if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(updateNavbar);
+        }
+    }
+
+    cacheSectionTops();
+    updateNavbar();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', () => {
+        cacheSectionTops();
+        onScroll();
     });
 }
 
@@ -508,18 +526,45 @@ function initHamburger() {
     const navMenu = document.getElementById('navMenu');
     const navLinks = navMenu.querySelectorAll('.nav-link');
 
+    function openMenu() {
+        hamburger.classList.add('active');
+        navMenu.classList.add('active');
+        hamburger.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+    }
+
+    function isOpen() {
+        return navMenu.classList.contains('active');
+    }
+
     hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+        isOpen() ? closeMenu() : openMenu();
     });
 
     navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-            document.body.style.overflow = '';
-        });
+        link.addEventListener('click', closeMenu);
+    });
+
+    // Tap на празниот дел од мениот го затвора
+    navMenu.addEventListener('click', (e) => {
+        if (e.target === navMenu) closeMenu();
+    });
+
+    // Escape го затвора мениот
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isOpen()) closeMenu();
+    });
+
+    // При resize на desktop го затвора (инаку body останува overflow:hidden)
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 1024 && isOpen()) closeMenu();
     });
 }
 
@@ -852,14 +897,24 @@ function initProgramsSlider() {
 
     addSwipeSupport(track, () => goToSlide(currentIndex - 1), () => goToSlide(currentIndex + 1));
 
-    createDots();
-
+    // Мобилен скрол го собира address bar-от → resize само по висина.
+    // Не го ресетирај слајдот ако ширината не се сменила.
+    let lastWidth = window.innerWidth;
+    let resizeTimer;
     window.addEventListener('resize', () => {
-        cardsPerView = getCardsPerView();
-        createDots();
-        goToSlide(0);
+        if (window.innerWidth === lastWidth) return;
+        lastWidth = window.innerWidth;
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            cardsPerView = getCardsPerView();
+            createDots();
+            goToSlide(currentIndex);
+        }, 150);
     });
+
+    createDots();
 }
+
 function initTrainersSlider() {
     const track = document.getElementById('trainersTrack');
     const prevBtn = document.getElementById('trainerPrev');
@@ -897,7 +952,7 @@ function initTrainersSlider() {
             .slice(-cardsPerView)
             .map(card => {
                 const clone = card.cloneNode(true);
-                clone.classList.add('clone');
+                clone.classList.add('clone', 'visible');
                 return clone;
             });
 
@@ -1016,10 +1071,23 @@ function initTrainersSlider() {
         restartAutoSlide();
     });
 
+    // Мобилен скрол го собира address bar-от → resize само по висина.
+    // Не го ресетирај индексот ако ширината не се сменила (инаку скок назад на прв тренер).
+    let lastWidth = window.innerWidth;
+    let resizeTimer;
     window.addEventListener('resize', () => {
-        cardsPerView = getCardsPerView();
-        setupClones();
-        createDots();
+        if (window.innerWidth === lastWidth) return;
+        lastWidth = window.innerWidth;
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            const realIndex = (currentIndex - cardsPerView + cards.length) % cards.length;
+            cardsPerView = getCardsPerView();
+            setupClones();
+            createDots();
+            currentIndex = cardsPerView + (realIndex % cards.length);
+            jumpToCurrent();
+            updateDots();
+        }, 150);
     });
 
     setupClones();
