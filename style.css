@@ -1129,6 +1129,22 @@ body.light-mode .hero-gradient-bottom {
     display: flex;
     gap: 24px;
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    touch-action: pan-y;
+}
+
+.programs-track.dragging {
+    transition: none;
+    user-select: none;
+}
+
+@media (hover: hover) {
+    .programs-track {
+        cursor: grab;
+    }
+
+    .programs-track.dragging {
+        cursor: grabbing;
+    }
 }
 
 .program-card {

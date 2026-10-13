@@ -895,7 +895,98 @@ function initProgramsSlider() {
     prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
     nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
 
-    addSwipeSupport(track, () => goToSlide(currentIndex - 1), () => goToSlide(currentIndex + 1));
+    // --- Drag-swipe: track-от следува прст/глушец, rubber-band на краевите ---
+    let dragging = false;
+    let axisLocked = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let dragStartTime = 0;
+    let dragBaseOffset = 0;
+
+    function cardStep() {
+        return cards[0].offsetWidth + 24;
+    }
+
+    function currentOffset() {
+        return currentIndex * cardsPerView * cardStep();
+    }
+
+    function maxOffset() {
+        const visible = track.parentElement.offsetWidth;
+        return Math.max(0, track.scrollWidth - visible);
+    }
+
+    function rubberBand(value) {
+        const max = maxOffset();
+        if (value < 0) return value * 0.3;
+        if (value > max) return max + (value - max) * 0.3;
+        return value;
+    }
+
+    track.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        dragging = true;
+        axisLocked = false;
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        dragStartTime = performance.now();
+        dragBaseOffset = currentOffset();
+    });
+
+    track.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+
+        const dx = e.clientX - dragStartX;
+        const dy = e.clientY - dragStartY;
+
+        if (!axisLocked) {
+            if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+            // Вертикално движење = скрол на страницата, не drag
+            if (Math.abs(dy) > Math.abs(dx)) {
+                dragging = false;
+                return;
+            }
+            axisLocked = true;
+            track.classList.add('dragging');
+            track.setPointerCapture(e.pointerId);
+        }
+
+        track.style.transform =
+            `translateX(-${rubberBand(dragBaseOffset - dx)}px)`;
+    });
+
+    function endDrag(e) {
+        if (!dragging) return;
+        dragging = false;
+        track.classList.remove('dragging');
+        if (!axisLocked) return;
+
+        const dx = e.clientX - dragStartX;
+        const elapsed = performance.now() - dragStartTime;
+        const quickFlick = elapsed < 300 && Math.abs(dx) > 30;
+        const strongSwipe = Math.abs(dx) > 50;
+
+        if (dx < 0 && (strongSwipe || quickFlick)) {
+            goToSlide(currentIndex + 1);
+        } else if (dx > 0 && (strongSwipe || quickFlick)) {
+            goToSlide(currentIndex - 1);
+        } else {
+            goToSlide(currentIndex); // snap back
+        }
+    }
+
+    track.addEventListener('pointerup', endDrag);
+
+    // Ако браузерот го прекине gesture-от (нпр. системски скрол) — само snap back
+    track.addEventListener('pointercancel', () => {
+        if (!dragging) return;
+        dragging = false;
+        track.classList.remove('dragging');
+        if (axisLocked) goToSlide(currentIndex);
+    });
+
+    // Не дозволи native drag на сликите внатре во картичките
+    track.addEventListener('dragstart', (e) => e.preventDefault());
 
     // Мобилен скрол го собира address bar-от → resize само по висина.
     // Не го ресетирај слајдот ако ширината не се сменила.
