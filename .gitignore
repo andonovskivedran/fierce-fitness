@@ -34,3 +34,4 @@ docker-compose.override.yml
 *.jks
 
 .stack-data/
+.ai/

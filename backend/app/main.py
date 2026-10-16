@@ -77,16 +77,16 @@ class HTTPSRedirectMiddleware(BaseHTTPMiddleware):
 
 
 _rate_limit_store: dict[str, list[float]] = defaultdict(list)
-RATE_LIMIT_WINDOW = 60
+RATE_LIMIT_WINDOW = int(os.getenv("RATE_LIMIT_WINDOW", "60"))
 RATE_LIMIT_MAX_REQUESTS = {
-    "auth/login": 10,
-    "auth/register": 5,
-    "contact/": 10,
-    "newsletter/": 10,
-    "memberships/subscribe": 20,
-    "memberships/switch": 20,
-    "memberships/deactivate": 20,
-    "appointments/book": 20,
+    "auth/login": int(os.getenv("RATE_LIMIT_LOGIN", "120")),
+    "auth/register": int(os.getenv("RATE_LIMIT_REGISTER", "60")),
+    "contact/": 30,
+    "newsletter/": 30,
+    "memberships/subscribe": 60,
+    "memberships/switch": 60,
+    "memberships/deactivate": 60,
+    "appointments/book": 60,
 }
 
 
@@ -96,17 +96,33 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         if request.method in ("POST", "PATCH", "DELETE"):
             matched = next((rp for rp in RATE_LIMIT_MAX_REQUESTS if path.endswith(rp)), None)
             if matched:
-                client_ip = request.client.host if request.client else "unknown"
+                # Use X-Forwarded-For / X-Real-IP set by Nginx so each
+                # real client gets its own rate-limit bucket instead of
+                # every request sharing the single proxy container IP.
+                forwarded = request.headers.get("x-forwarded-for")
+                if forwarded:
+                    client_ip = forwarded.split(",")[0].strip()
+                else:
+                    client_ip = (
+                        request.headers.get("x-real-ip")
+                        or (request.client.host if request.client else "unknown")
+                    )
                 key = f"{client_ip}:{matched}"
                 now = time.time()
                 _rate_limit_store[key] = [
                     t for t in _rate_limit_store[key] if now - t < RATE_LIMIT_WINDOW
                 ]
-                if len(_rate_limit_store[key]) >= RATE_LIMIT_MAX_REQUESTS[matched]:
+                max_req = RATE_LIMIT_MAX_REQUESTS[matched]
+                if max_req > 0 and len(_rate_limit_store[key]) >= max_req:
+                    origin = request.headers.get("origin", "*")
                     return Response(
-                        content='{"detail":"Too many requests. Please try again later."}',
+                        content='{"detail":"Премногу барања. Ве молиме обидете се повторно за кратко."}',
                         status_code=429,
                         media_type="application/json",
+                        headers={
+                            "Access-Control-Allow-Origin": origin,
+                            "Access-Control-Allow-Credentials": "true",
+                        },
                     )
                 _rate_limit_store[key].append(now)
         return await call_next(request)

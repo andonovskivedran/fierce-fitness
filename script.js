@@ -7,6 +7,22 @@ const SERVED_BY_NGINX = ['', '80', '8080'].includes(window.location.port);
 const IS_STANDALONE = window.location.protocol === 'file:' || (IS_LOCAL_HOST && !SERVED_BY_NGINX);
 const API_BASE = IS_STANDALONE ? 'http://localhost:8000' : '/api';
 
+function formatErrorMessage(errData, fallbackStatus = "") {
+    if (!errData) return fallbackStatus ? `HTTP ${fallbackStatus}` : "Настана грешка";
+    if (typeof errData === "string") return errData;
+    if (typeof errData.detail === "string") return errData.detail;
+    if (Array.isArray(errData.detail)) {
+        return errData.detail
+            .map(d => (d && d.msg) ? d.msg : (typeof d === "string" ? d : JSON.stringify(d)))
+            .join(", ");
+    }
+    if (errData.detail && typeof errData.detail === "object") {
+        return errData.detail.msg || JSON.stringify(errData.detail);
+    }
+    if (typeof errData.message === "string") return errData.message;
+    return fallbackStatus ? `HTTP ${fallbackStatus}` : "Настана грешка";
+}
+
 async function api(path, options = {}) {
     const token = localStorage.getItem("token");
     const headers = { "Content-Type": "application/json", ...options.headers };
@@ -24,8 +40,8 @@ async function api(path, options = {}) {
         throw new Error("Сесијата истече. Ве молиме најавете се повторно.");
     }
     if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.detail || `HTTP ${res.status}`);
+        const err = await res.json().catch(() => null);
+        throw new Error(formatErrorMessage(err, res.status));
     }
     if (res.status === 204) return null;
     return res.json();
@@ -42,7 +58,8 @@ function showToast(message, isError = false) {
     const t = document.getElementById("toast");
     const m = document.getElementById("toastMessage");
     const i = t.querySelector("i");
-    m.textContent = message;
+    const displayMsg = (typeof message === "string") ? message : formatErrorMessage(message);
+    m.textContent = displayMsg;
     i.className = isError ? "fas fa-exclamation-circle" : "fas fa-check-circle";
     t.classList.toggle("error", isError);
     t.classList.add("show");
@@ -1337,8 +1354,8 @@ function initAuthModal() {
                 throw new Error("Серверот не е достапен. Проверете дали backend е вклучен.");
             }
             if (!res.ok) {
-                const err = await res.json().catch(() => ({}));
-                throw new Error(err.detail || `HTTP ${res.status}`);
+                const errBody = await res.json().catch(() => null);
+                throw new Error(formatErrorMessage(errBody, res.status));
             }
             const data = await res.json();
             localStorage.setItem("token", data.access_token);

@@ -8,8 +8,8 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - ./.stack-data/postgres:/var/lib/postgresql/data
-    cpus: 0.2
-    mem_limit: 256m
+    cpus: 1.0
+    mem_limit: 512m
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
@@ -36,8 +36,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    cpus: 0.2
-    mem_limit: 384m
+    cpus: 1.0
+    mem_limit: 512m
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/')"]
       interval: 30s
@@ -50,5 +50,5 @@ services:
       dockerfile: nginx/Dockerfile
     depends_on:
       - backend
-    cpus: 0.05
-    mem_limit: 32m
+    cpus: 0.5
+    mem_limit: 64m
