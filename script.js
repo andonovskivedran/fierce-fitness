@@ -106,7 +106,7 @@ const translations = {
         nav_contact: "Контакт",
         nav_cta: "Приклучи се",
         // Hero
-        hero_badge: "Најсилниот фитнес центар во Скопје",
+        hero_badge: "Фитнес центар со автентична енергија и своја приказна",
         hero_title: 'ИЗГРАДИ ЈА СВОЈАТА<br><span class="text-accent">НАЈСИЛНА</span> ВЕРЗИЈА',
         hero_desc: "Fierce Fitness е повеќе од теретана — тоа е место каде што се креираат шампиони. Со модерна опрема, сертифицирани тренери и атмосфера која те тера да дадеш се од себе, секој тренинг е чекор кон твојата најдобра верзија.",
         hero_cta1: "Приклучи се",
@@ -201,7 +201,7 @@ const translations = {
         confirm_cancel: "Откажи",
         confirm_ok: "Потврди",
         // Footer
-        footer_desc: "Најсилниот фитнес центар во Скопје. Изгради ја својата најсилна верзија со нас.",
+        footer_desc: "Фитнес центар со автентична енергија и своја приказна. Изгради ја својата најсилна верзија со нас.",
         footer_quick_links: "Брзи линкови",
         footer_newsletter: "Newsletter",
         footer_newsletter_desc: "Пријави се за совети за тренирање и ексклузивни понуди.",
@@ -241,7 +241,7 @@ const translations = {
         nav_contact: "Contact",
         nav_cta: "Join Now",
         // Hero
-        hero_badge: "The strongest fitness center in Skopje",
+        hero_badge: "Fitness center with authentic energy and its own story",
         hero_title: 'BUILD YOUR<br><span class="text-accent">STRONGEST</span> VERSION',
         hero_desc: "Fierce Fitness is more than a gym — it's where champions are made. With modern equipment, certified trainers, and an atmosphere that pushes you to give your all, every workout is a step toward your best self.",
         hero_cta1: "Join Now",
@@ -345,7 +345,7 @@ const translations = {
         confirm_cancel: "Cancel",
         confirm_ok: "Confirm",
         // Footer
-        footer_desc: "The strongest fitness center in Skopje. Build your strongest version with us.",
+        footer_desc: "Fitness center with authentic energy and its own story. Build your strongest version with us.",
         footer_quick_links: "Quick Links",
         footer_newsletter: "Newsletter",
         footer_newsletter_desc: "Sign up for training tips and exclusive offers.",
@@ -1653,7 +1653,8 @@ const staticBlogPosts = [
         content: "Секој тренинг започнува со правилна подготовка. Загревањето е клучно за да го подготвите телото за интензивни вежби и да спречите повреди. Почнете со 5-10 минути кардио, а потоа фокусирајте се на динамички истегнувања. Вклучете го целото тело за максимален ефект. Поставете си реални цели и следете го напредокот. Конзистентноста е поважна од интензитетот — подобро е да тренирате 3-4 пати неделно умерено отколку секој ден премногу.",
         category: "Тренинг",
         created_at: "2026-09-10T10:00:00",
-        author_name: "Драгана Андреевска"
+        author_name: "Драгана Андреевска",
+        image: "images/blog-training.jpg"
     },
     {
         id: 2,
@@ -1661,7 +1662,8 @@ const staticBlogPosts = [
         content: "Исхраната игра 70% од улогата во постигнувањето на твоите фитнес цели. Протеинот е градбен блок на мускулите — консумирајте 1.6-2.2г протеин по килограм телесна тежина. Јаглехидратите се гориво за тренингот, а здравите масти помагаат за хормонална рамнотежа. Хидратацијата е клучна — пијте најмалку 2-3 литри вода дневно. Планирајте ги оброците околу тренингот за оптимални резултати.",
         category: "Исхрана",
         created_at: "2026-09-07T14:30:00",
-        author_name: "Мила Петровска"
+        author_name: "Мила Петровска",
+        image: "images/blog-nutrition.jpg"
     },
     {
         id: 3,
@@ -1669,7 +1671,8 @@ const staticBlogPosts = [
         content: "Мускулите не растат за време на тренингот, туку за време на одморот. Кога тренирате интензивно, телото има потреба од 48-72 часа за целосно опоравување. Недоволниот одмор води до прекумерна тренираност, замор и зголемен ризик од повреди. Спиењето е најважниот фактор за опоравување — целта е 7-9 часа ноќно спиење. Вклучете денови за активно опоравување како лесно пешачење, јога или истегнување.",
         category: "Опоравување",
         created_at: "2026-09-03T09:15:00",
-        author_name: "Андријана Атанасовска"
+        author_name: "Андријана Атанасовска",
+        image: "images/functional.jpg"
     },
     {
         id: 4,
@@ -1677,7 +1680,8 @@ const staticBlogPosts = [
         content: "Зимските месеци се предизвик за одржување на рутината. Клучот е да најдеш активност која ти причинува задоволство. Постави си мали, остварливи цели наместо големи. Тренирај со пријател за взаемна мотивација. Следи го напредокот — запишувај ги тренинзите и слави ги малите победи. Сети се зошто започна и концентрирај се на тоа како се чувствуваш по тренингот, а не само на изгледот.",
         category: "Мотивација",
         created_at: "2026-08-28T16:00:00",
-        author_name: "Николина Наумовска"
+        author_name: "Николина Наумовска",
+        image: "images/blog-motivation.jpg"
     },
     {
         id: 5,
@@ -1685,7 +1689,8 @@ const staticBlogPosts = [
         content: "High-Intensity Interval Training (HIIT) е еден од најефикасните начини за согорување калории и подобрување на кондицијата. Принципот е едноставен — кратки интервали на интензивно вежбање проследени со кратки одмори. Еден тренинг трае 20-30 минути, а ефектот е подолг од класичниот кардио тренинг. HIIT го забрзува метаболизмот и до 24 часа по тренингот. Идеален е за оние кои немаат многу време, а сакаат максимални резултати.",
         category: "Тренинг",
         created_at: "2026-08-22T11:00:00",
-        author_name: "Стефани Радевска"
+        author_name: "Стефани Радевска",
+        image: "images/personal.jpg"
     },
     {
         id: 6,
@@ -1693,12 +1698,19 @@ const staticBlogPosts = [
         content: "Многу луѓе го занемаруваат истегнувањето, но тоа е клучен дел од секој тренинг. Пред тренинг, фокусирајте се на динамично истегнување кое ги активира мускулите и го зголемува обемот на движење. По тренинг, статичкото истегнување помага за опоравување и намалување на болката во мускулите. Редовното истегнување го подобрува флексибилноста, ја намалува веројатноста од повреди и помага за подобра постава на телото. Посветете барем 10 минути на истегнување по секој тренинг.",
         category: "Опоравување",
         created_at: "2026-08-18T13:45:00",
-        author_name: "Михаела Василевска"
+        author_name: "Михаела Василевска",
+        image: "images/blog-health.jpg"
     }
 ];
 
+function getBlogImage(post, index) {
+    if (post && post.image) return post.image;
+    if (post && post.image_url) return post.image_url;
+    return blogFallbackImages[index % blogFallbackImages.length];
+}
+
 function renderBlogCard(post, index) {
-    const image = blogFallbackImages[index % blogFallbackImages.length];
+    const image = getBlogImage(post, index);
     const date = new Date(post.created_at).toLocaleDateString('mk-MK', {
         year: 'numeric', month: 'long', day: 'numeric'
     });
@@ -1764,7 +1776,7 @@ function openBlogModal(index) {
     const authorEl = document.getElementById('blogModalAuthor');
     const textEl = document.getElementById('blogModalText');
 
-    img.src = blogFallbackImages[index % blogFallbackImages.length];
+    img.src = getBlogImage(post, index);
     img.alt = post.title || '';
     category.textContent = post.category || '';
     category.style.display = post.category ? '' : 'none';
