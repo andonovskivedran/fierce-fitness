@@ -1690,7 +1690,7 @@ const staticBlogPosts = [
         category: "Тренинг",
         created_at: "2026-08-22T11:00:00",
         author_name: "Стефани Радевска",
-        image: "images/personal.jpg"
+        image: "https://images.unsplash.com/photo-1594381898411-846e7d193883?w=800&q=80"
     },
     {
         id: 6,
