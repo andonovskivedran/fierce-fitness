@@ -1672,7 +1672,7 @@ const staticBlogPosts = [
         category: "Опоравување",
         created_at: "2026-09-03T09:15:00",
         author_name: "Андријана Атанасовска",
-        image: "images/functional.jpg"
+        image: "images/blog-recovery.jpg"
     },
     {
         id: 4,
